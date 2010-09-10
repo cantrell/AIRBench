@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MobileApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					 xmlns:s="library://ns.adobe.com/flex/spark"
+					 firstView="com.adobe.airbench.views.Home"
+					 initialize="onInit();"
+					 creationComplete="onCreationComplete();">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			import com.adobe.airbench.navigation.NavigationManager;
+			import com.adobe.airbench.tests.Test;
+			import com.adobe.airbench.tests.TestManager;
+			import com.adobe.airbench.views.*;
+
+			private var ml:ModelLocator;
+
+			// Runs first.
+			private function onInit():void
+			{
+				// TBD: Hopefully this can be removed if/when the title is centered by default.
+				this.navigator.actionBar.setStyle("titleAlign", "center");
+				this.ml = ModelLocator.getInstance();
+				this.initializeTestData();
+				this.ml.testManager.addEventListener(Event.COMPLETE, onAllTestsComplete);
+			}
+
+			// Runs after rootView is initialized.
+			private function onCreationComplete():void
+			{
+			}
+			
+			private function initializeTestData():void
+			{
+				var f:File = File.applicationDirectory.resolvePath("tests.xml");
+				var fs:FileStream = new FileStream();
+				fs.open(f, FileMode.READ);
+				var xmlBytes:ByteArray = new ByteArray();
+				fs.readBytes(xmlBytes);
+				fs.close();
+				var testXml:XML = new XML(xmlBytes);
+				var viewsXml:XMLList = testXml.view;
+				
+				var navData:Vector.<String> = new Vector.<String>(viewsXml.length());
+				var testManager:TestManager = new TestManager();
+				
+				for each (var viewNode:XML in viewsXml)
+				{
+					var index:uint = viewNode.@order;
+					var className:String = viewNode.className;
+					navData[index] = className;
+					var benchmarksNode:XMLList = viewNode.benchmarks;
+					if (benchmarksNode)
+					{
+						for each (var testNode:XML in benchmarksNode.test)
+						{
+							var testId:String = testNode.@id;
+							var displayName:String = testNode.@displayName;
+							var testType:String = testNode.@type;
+							testManager.registerTest(testId, displayName, testType, className);
+						}
+					}
+				}
+				
+				System.disposeXML(testXml);
+				
+				var navigationManager:NavigationManager = new NavigationManager();
+				navigationManager.setNavigationData(navData);
+				this.ml.navigationManager = navigationManager;
+				this.ml.testManager = testManager;
+			}
+
+			private function onHome():void
+			{
+				this.navigator.pushView(this.ml.navigationManager.getStartView());
+			}
+			
+			private function onViewResults():void
+			{
+				this.navigator.pushView(this.ml.navigationManager.getEndView());
+			}
+			
+			private function onAllTestsComplete(e:Event):void
+			{
+			}
+			
+		]]>
+	</fx:Script>
+	<s:navigationContent>
+		<s:Button icon="{ModelLocator.getInstance().HomeIconClass}" click="onHome();"/>
+	</s:navigationContent>
+	<s:actionContent>
+		<s:Button icon="{ModelLocator.getInstance().ReportIconClass}" click="onViewResults();"/>
+	</s:actionContent>
+</s:MobileApplication>

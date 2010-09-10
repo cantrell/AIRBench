@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  creationComplete="onCreationComplete();">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			import com.adobe.airbench.navigation.NavigationInfo;
+			
+			import spark.components.View;
+			import spark.effects.SlideViewTransition;
+			
+			private var navInfo:NavigationInfo;
+			
+			private function onCreationComplete():void
+			{
+				this.navInfo = ModelLocator.getInstance().navigationManager.getNavigationInfo(getQualifiedClassName(this.parent));
+				if (this.navInfo.previousView == null) this.backButton.visible = false;
+				if (this.navInfo.nextView == null) this.nextButton.visible = false;
+			}
+				
+			private function onPreviousView():void
+			{
+				View(this.parent).navigator.popView();
+			}
+			
+			private function onNextView():void
+			{
+				View(this.parent).navigator.pushView(this.navInfo.nextView);
+			}
+			
+			public function set showStatusTest(showStatusText:Boolean):void
+			{
+				this.testStatus.visible = showStatusText;
+				this.testResult.visible = showStatusText;
+				if (!showStatusText)
+				{
+					this.backButton.enabled = true;
+					this.nextButton.enabled = true;
+				}
+			}
+			
+			public function testComplete(passed:Boolean, resultMessage:String = null):void
+			{
+				if (passed)
+				{
+					this.testStatus.text = "Test Passed";
+					this.testStatus.styleDeclaration.setStyle("color", 0x00ff00);
+				}
+				else
+				{
+					this.testStatus.text = "Test Failed";
+					this.testStatus.styleDeclaration.setStyle("color", 0xff0000);
+				}
+
+				if (resultMessage == null)
+				{
+					this.testResult.visible = false;
+				}
+				else
+				{
+					this.testResult.text = resultMessage;
+				}
+				
+				this.backButton.enabled = true;
+				this.nextButton.enabled = true;
+			}
+		]]>
+	</fx:Script>
+	<s:Button id="backButton" label="Back" click="onPreviousView();" left="4" bottom="4" enabled="false"/>
+	<s:Button id="nextButton" label="Next" click="onNextView();" right="4" bottom="4" enabled="false"/>
+	<s:Label id="testStatus" text="Running test..." bottom="38" horizontalCenter="0"/>
+	<s:Label id="testResult" text="" bottom="8" horizontalCenter="0"/>
+</s:Group>

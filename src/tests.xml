@@ -1,0 +1,34 @@
+<nav>
+	<view order="0">
+		<className>com.adobe.airbench.views::Home</className>
+	</view>
+	<view order="1">
+		<className>com.adobe.airbench.views::CameraTest</className>
+		<benchmarks>
+			<test id="camera" displayName="Camera" type="capability"/>
+		</benchmarks>
+	</view>
+	<view order="2">
+		<className>com.adobe.airbench.views::CameraUIImageTest</className>
+		<benchmarks>
+			<test id="camera_ui_image" displayName="Camera UI Image" type="capability"/>
+		</benchmarks>
+	</view>
+	<view order="3">
+		<className>com.adobe.airbench.views::XMLTest</className>
+		<benchmarks>
+			<test id="xml_parsing_performance" displayName="XML Parsing Performance" type="performance"/>
+		</benchmarks>
+	</view>
+	<view order="4">
+		<className>com.adobe.airbench.views::Results</className>
+	</view>
+	<!--
+	<view order="3">
+		<className>com.adobe.airbench.views::CameraRollTest</className>
+		<benchmarks>
+			<test id="camera_roll" displayName="Camera Roll" type="capability"/>
+		</benchmarks>
+	</view>
+	-->
+</nav>

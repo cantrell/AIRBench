@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Results" viewActivate="onViewActivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			import com.adobe.airbench.navigation.NavigationInfo;
+			import com.adobe.airbench.tests.CapabilityTest;
+			import com.adobe.airbench.tests.PerformanceTest;
+			import com.adobe.airbench.tests.Test;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.IndexChangedEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			private function onViewActivate():void
+			{
+				var testData:Vector.<Test> = ModelLocator.getInstance().testManager.getTests();
+				var capabilityTestData:Array = new Array();
+				var performanceTestData:Array = new Array();
+				for each (var test:Test in testData)
+				{
+					if (test is CapabilityTest)
+					{
+						capabilityTestData.push(test);
+					}
+					else
+					{
+						performanceTestData.push(test);
+					}
+				}
+				var allTestData:Array = capabilityTestData.concat(performanceTestData);
+				resultsList.dataProvider = new ArrayCollection(allTestData);
+			}
+			
+			private function onTestSelected(e:IndexChangeEvent):void
+			{
+				var list:List = e.target as List;
+				var selectedTest:Test = list.selectedItem as Test;
+				var navInfo:NavigationInfo = ModelLocator.getInstance().navigationManager.getNavigationInfo(selectedTest.viewClassName);
+				this.navigator.pushView(navInfo.thisView);
+			}
+		]]>
+	</fx:Script>
+	
+	<s:VGroup width="100%" height="100%">
+		<components:MultiLineLabel text="Below are your test results." width="100%"/>
+		<s:List id="resultsList" width="100%" height="100%" change="onTestSelected(event);">
+			<s:itemRenderer>
+				<fx:Component>
+					<s:MobileIconItemRenderer labelFunction="getLabel" messageFunction="getMessage" iconFunction="getIcon">
+						<fx:Script>
+							<![CDATA[
+								import com.adobe.airbench.model.ModelLocator;
+								import com.adobe.airbench.tests.PerformanceTest;
+								private function getLabel(item:Object):String
+								{
+									return item.displayName;
+								}
+
+								private function getMessage(item:Object):String
+								{
+									if (!item.complete)
+									{
+										return "Test hasn't been run.";
+									}
+									return item.message;
+								}
+								
+								private function getIcon(item:Object):Class
+								{
+									if (!item.complete)
+									{
+										return ModelLocator.getInstance().TestNotRunIconClass;
+									}
+									if (item is PerformanceTest)
+									{
+										return ModelLocator.getInstance().PerfTestIconClass;
+									}
+									if (item.passed)
+									{
+										return ModelLocator.getInstance().TestPassedIconClass;
+									}
+									return ModelLocator.getInstance().TestFailedIconClass;
+								}
+							]]>
+						</fx:Script>
+					</s:MobileIconItemRenderer>
+				</fx:Component>
+			</s:itemRenderer>
+		</s:List>
+	</s:VGroup>
+	
+	<components:NavigationBar left="0" right="0" bottom="0" showStatusTest="false"/>
+
+</s:View>

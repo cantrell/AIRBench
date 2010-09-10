@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Camera Roll Test"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	<fx:Script>
+		<![CDATA[
+
+			private const CAMERA_ROLL_TEST:String = "camera_roll";
+			
+			private function onViewActivate():void
+			{
+				
+			}
+			
+			private function onViewDeactivate():void
+			{
+				
+			}
+
+		]]>
+	</fx:Script>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Test Title"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			private const TEST_ID:String = "test_id";
+			private var ml:ModelLocator;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				//this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, true, "This test passed!");
+				//this.ml.testManager.reportPerformanceTestResults(TEST_ID, totalTime, "This test passed");
+				//this.navBar.testComplete(true, "Test Passed!");
+			}
+			
+			private function onViewDeactivate():void
+			{
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

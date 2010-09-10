@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="XML Perf Test"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+
+		<fx:Script>
+			<![CDATA[
+				import com.adobe.airbench.model.ModelLocator;
+				
+				private const TEST_ID:String = "xml_parsing_performance";
+				private var ml:ModelLocator;
+				
+				private function onViewActivate():void
+				{
+					this.ml = ModelLocator.getInstance();
+					var xmlFile:File = File.applicationDirectory.resolvePath("test_assets/subscriptions.xml");
+					var fs:FileStream = new FileStream();
+					fs.addEventListener(Event.COMPLETE, onXmlFileLoaded);
+					fs.openAsync(xmlFile, FileMode.READ);
+				}
+				
+				private function onXmlFileLoaded(e:Event):void
+				{
+					var fs:FileStream = e.target as FileStream;
+					fs.removeEventListener(Event.COMPLETE, onXmlFileLoaded);
+					var fileBytes:ByteArray = new ByteArray();
+					fs.readBytes(fileBytes);
+					fs.close();
+					var startTime:Number = new Date().time;
+					var testXml:XML = new XML(fileBytes);
+					var parsedXml:String = testXml.toXMLString();
+					var totalTime:Number = new Date().time - startTime;
+					this.output.text = "XML Parse time: " + String(totalTime) + " ms";
+					this.ml.testManager.reportPerformanceTestResults(TEST_ID, totalTime, "XML document parsed in " + String(totalTime) + " ms.");
+					this.navBar.testComplete(true, "Test Complete");
+				}
+				
+				private function onViewDeactivate():void
+				{
+					
+				}
+				
+			]]>
+		</fx:Script>
+	<s:Label id="output" horizontalCenter="0" top="150" fontWeight="bold"/>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

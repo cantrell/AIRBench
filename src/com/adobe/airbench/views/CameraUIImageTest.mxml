@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Camera UI Test"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			import mx.core.UIComponent;
+			
+			private const TEST_ID:String = "camera_ui_image";
+			private const IMAGE_SIZE:uint = 400;
+			private var ml:ModelLocator;
+			private var tmpFile:File;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				this.testCameraUI();
+			}
+
+			private function onViewDeactivate():void
+			{
+			}
+			
+			private function testCameraUI():void
+			{
+				if (!CameraUI.isSupported)
+				{
+					this.launchButton.enabled = false;
+					this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, false, "CameraUI.isSupported returns false.");
+					this.navBar.testComplete(false, "Camera UI unsupported");
+					return;
+				}
+			}
+			
+			private function onLaunchCameraUI(e:Event):void
+			{
+				var cameraUI:CameraUI = new CameraUI();
+				cameraUI.addEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
+				cameraUI.launch(MediaType.IMAGE);
+			}
+			
+			private function onCameraUIComplete(e:MediaEvent):void
+			{
+				this.imageDisplay.removeAllElements();
+				var cameraUI:CameraUI = e.target as CameraUI;
+				cameraUI.removeEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
+				var fs:FileStream = new FileStream();
+				fs.addEventListener(Event.COMPLETE, onFileLoaded);
+				this.tmpFile = e.data.file;
+				fs.openAsync(this.tmpFile, FileMode.READ);
+			}
+			
+			private function onFileLoaded(e:Event):void
+			{
+				var fs:FileStream = e.target as FileStream;
+				fs.removeEventListener(Event.COMPLETE, onFileLoaded);
+				var fileBytes:ByteArray = new ByteArray();
+				fs.readBytes(fileBytes);
+				fs.close();
+				this.tmpFile.addEventListener(Event.COMPLETE, onFileDeleted);
+				this.tmpFile.deleteFileAsync();
+				var loader:Loader = new Loader();
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderComplete);
+				loader.loadBytes(fileBytes);
+			}
+			
+			private function onFileDeleted(e:Event):void
+			{
+				this.tmpFile.removeEventListener(Event.COMPLETE, onFileDeleted);
+				this.tmpFile = null;
+			}
+			
+			private function onLoaderComplete(e:Event):void
+			{
+				var loaderInfo:LoaderInfo = e.target as LoaderInfo;
+				loaderInfo.removeEventListener(Event.COMPLETE, onLoaderComplete);
+				var loader:Loader = loaderInfo.loader;
+
+				var scaleFactor:Number = 1;
+				if (loader.width > loader.height && loader.width > IMAGE_SIZE)
+				{
+					scaleFactor = IMAGE_SIZE / loader.width;
+				}
+				if (loader.height > loader.width && loader.height > IMAGE_SIZE)
+				{
+					scaleFactor = IMAGE_SIZE / loader.height;
+				}
+				var bmd:BitmapData = Bitmap(loader.content).bitmapData;
+				var scaledBMD:BitmapData = new BitmapData(loader.width * scaleFactor, loader.height * scaleFactor);
+				var matrix:Matrix = new Matrix();
+				matrix.scale(scaleFactor, scaleFactor);
+				scaledBMD.draw(bmd, matrix, null, null, null, true);
+				var uic:UIComponent = new UIComponent();
+				uic.addChild(new Bitmap(scaledBMD));
+				uic.x = (IMAGE_SIZE/2) - (scaledBMD.width/2);
+				uic.y = (IMAGE_SIZE/2) - (scaledBMD.height/2);
+				loader.unload();
+				bmd = null;
+				imageDisplay.addElement(uic);
+				this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, true, "The Camera UI works for taking pictures.");
+				this.navBar.testComplete(true, "Camera UI works!");
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" paddingTop="30">
+		<s:Group id="imageDisplay" width="400" height="400"/>
+		<s:Button id="launchButton" label="Launch Camera UI" click="onLaunchCameraUI(event)"/>
+	</s:VGroup>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

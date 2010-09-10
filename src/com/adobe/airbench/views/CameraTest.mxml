@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Camera Test"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			import mx.collections.ArrayCollection;
+			import mx.core.UIComponent;
+
+			private const TEST_ID:String = "camera";
+			
+			private var ml:ModelLocator;
+			private var video:Video;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				this.testCamera();
+			}
+			
+			private function onViewDeactivate():void
+			{
+				if (this.video != null)
+				{
+					this.video.attachCamera(null);
+					this.videoDisplay.removeAllElements();
+					this.video = null;
+				}
+			}
+			
+			private function testCamera():void
+			{
+				if (!Camera.isSupported)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, false, "Camera.isSupported returns false.");
+					this.navBar.testComplete(false, "Camera unsupported");
+					return;
+				}
+				
+				var cam:Camera = Camera.getCamera();
+				if (cam == null)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, false, "Camera.getCamera returns null.");
+					this.navBar.testComplete(false, "Camera is null");
+				}
+				else
+				{
+					cam.setMode(400, 300, 30, false);
+					cam.setMotionLevel(0);
+					cam.addEventListener(ActivityEvent.ACTIVITY, onCameraActivity);
+					this.video = new Video(this.videoDisplay.width, this.videoDisplay.height);
+					var m:Matrix = new Matrix();
+					m.rotate(Math.PI/2); // 90 degrees
+					this.video.transform.matrix = m;
+					this.video.attachCamera(cam);
+					var uic:UIComponent = new UIComponent();
+					uic.addChild(this.video);
+					uic.x = ((videoDisplay.width/2) - (this.video.width/2)) + this.video.width;
+					uic.y = ((videoDisplay.height/2) - (this.video.height/2)) - 50;
+					this.videoDisplay.addElement(uic);
+				}
+			}
+
+			private function onCameraActivity(e:ActivityEvent):void
+			{
+				var cam:Camera = e.target as Camera;
+				cam.removeEventListener(ActivityEvent.ACTIVITY, onCameraActivity);
+				this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, true, "Your device's camera works.");
+				this.navBar.testComplete(true, "Camera works!");
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+		<s:Group id="videoDisplay" width="320" height="240"/>
+	</s:VGroup>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>
