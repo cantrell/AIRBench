@@ -15,20 +15,48 @@
 		</benchmarks>
 	</view>
 	<view order="3">
+		<className>com.adobe.airbench.views::CameraUIVideoTest</className>
+		<benchmarks>
+			<test id="camera_ui_video" displayName="Camera UI Video" type="capability"/>
+		</benchmarks>
+	</view>
+	<view order="4">
+		<className>com.adobe.airbench.views::CameraRollAddTest</className>
+		<benchmarks>
+			<test id="camera_roll_add" displayName="Camera Roll Add" type="capability"/>
+		</benchmarks>
+	</view>
+	<view order="5">
+		<className>com.adobe.airbench.views::CameraRollBrowseTest</className>
+		<benchmarks>
+			<test id="camera_roll_browse" displayName="Camera Roll Browse" type="capability"/>
+		</benchmarks>
+	</view>
+	<view order="6">
+		<className>com.adobe.airbench.views::GeolocationTest</className>
+		<benchmarks>
+			<test id="geolocation" displayName="Geolocation" type="capability"/>
+		</benchmarks>
+	</view>
+	<view order="7">
+		<className>com.adobe.airbench.views::AccelerometerTest</className>
+		<benchmarks>
+			<test id="accelerometer" displayName="Accelerometer" type="capability"/>
+		</benchmarks>
+	</view>
+	<view order="8">
+		<className>com.adobe.airbench.views::MultitouchTest</className>
+		<benchmarks>
+			<test id="multitouch" displayName="Multitouch" type="capability"/>
+		</benchmarks>
+	</view>
+	<view order="9">
 		<className>com.adobe.airbench.views::XMLTest</className>
 		<benchmarks>
 			<test id="xml_parsing_performance" displayName="XML Parsing Performance" type="performance"/>
 		</benchmarks>
 	</view>
-	<view order="4">
+	<view order="10">
 		<className>com.adobe.airbench.views::Results</className>
 	</view>
-	<!--
-	<view order="3">
-		<className>com.adobe.airbench.views::CameraRollTest</className>
-		<benchmarks>
-			<test id="camera_roll" displayName="Camera Roll" type="capability"/>
-		</benchmarks>
-	</view>
-	-->
 </nav>

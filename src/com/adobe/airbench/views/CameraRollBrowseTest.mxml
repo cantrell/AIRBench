@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="CameraRoll Browse"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			private const CAMERA_ROLL_BROWSE:String = "camera_roll_browse";
+			
+			private var ml:ModelLocator;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+
+				if (!CameraRoll.supportsBrowseForImage)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, false, "Can't browse camera roll.");
+					this.navBar.testComplete(false, "Can't browse CameraRoll");
+					return;
+				}
+				this.browseCameraRollButton.enabled = true;
+			}
+			
+			private function onViewDeactivate():void
+			{
+			}
+			
+			private function testCameraRollBrowse():void
+			{
+				var cameraRoll:CameraRoll = new CameraRoll();
+				cameraRoll.addEventListener(MediaEvent.SELECT, onSelect);
+				cameraRoll.addEventListener(Event.CANCEL, onCancel);
+				cameraRoll.addEventListener(ErrorEvent.ERROR, onError);
+				cameraRoll.browseForImage();
+			}
+			
+			private function onSelect(e:MediaEvent):void
+			{
+				var cameraRoll:CameraRoll = e.target as CameraRoll;
+				cameraRoll.removeEventListener(MediaEvent.SELECT, onSelect);
+				cameraRoll.removeEventListener(ErrorEvent.ERROR, onError);
+				cameraRoll.removeEventListener(Event.CANCEL, onCancel);
+				if (!e.data || !e.data.file || e.data.file.size == 0)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, false, "Camera roll image empty.");
+					this.navBar.testComplete(false, "Can't browse CameraRoll");
+					return;
+				}
+				this.imageOutput.source = e.data.file.url;
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, true, "Browsing camera roll successful.");
+				this.navBar.testComplete(true, "Image found!");
+			}
+			
+			private function onError(e:ErrorEvent):void
+			{
+				var cameraRoll:CameraRoll = e.target as CameraRoll;
+				cameraRoll.removeEventListener(MediaEvent.SELECT, onSelect);
+				cameraRoll.removeEventListener(ErrorEvent.ERROR, onError);
+				cameraRoll.removeEventListener(Event.CANCEL, onCancel);
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, false, e.text);
+				this.navBar.testComplete(false, "Browsing failed");
+			}
+
+			private function onCancel(e:ErrorEvent):void
+			{
+				var cameraRoll:CameraRoll = e.target as CameraRoll;
+				cameraRoll.removeEventListener(MediaEvent.SELECT, onSelect);
+				cameraRoll.removeEventListener(ErrorEvent.ERROR, onError);
+				cameraRoll.removeEventListener(Event.CANCEL, onCancel);
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, false, "Camera roll browse canceled.");
+				this.navBar.testComplete(false, "Browse canceled");
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="20">
+		<s:Image id="imageOutput" width="400" height="400"/>
+		<s:Button id="browseCameraRollButton" label="Browse Camera Roll" click="testCameraRollBrowse();" enabled="false"/>
+	</s:VGroup>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

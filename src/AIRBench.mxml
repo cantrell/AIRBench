@@ -12,6 +12,17 @@
 			import com.adobe.airbench.tests.TestManager;
 			import com.adobe.airbench.views.*;
 
+			AccelerometerTest;
+			CameraRollAddTest;
+			CameraRollBrowseTest;
+			CameraTest;
+			CameraUIImageTest;
+			CameraUIVideoTest;
+			GeolocationTest;
+			MultitouchTest;
+			XMLTest;
+			Results;
+			
 			private var ml:ModelLocator;
 
 			// Runs first.

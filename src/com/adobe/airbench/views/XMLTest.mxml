@@ -10,7 +10,7 @@
 			<![CDATA[
 				import com.adobe.airbench.model.ModelLocator;
 				
-				private const TEST_ID:String = "xml_parsing_performance";
+				private const XML_PARSING_PERFORMANCE:String = "xml_parsing_performance";
 				private var ml:ModelLocator;
 				
 				private function onViewActivate():void
@@ -34,7 +34,7 @@
 					var parsedXml:String = testXml.toXMLString();
 					var totalTime:Number = new Date().time - startTime;
 					this.output.text = "XML Parse time: " + String(totalTime) + " ms";
-					this.ml.testManager.reportPerformanceTestResults(TEST_ID, totalTime, "XML document parsed in " + String(totalTime) + " ms.");
+					this.ml.testManager.reportPerformanceTestResults(XML_PARSING_PERFORMANCE, totalTime, "XML document parsed in " + String(totalTime) + " ms.");
 					this.navBar.testComplete(true, "Test Complete");
 				}
 				

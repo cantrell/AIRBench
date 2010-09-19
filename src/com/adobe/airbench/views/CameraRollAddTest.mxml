@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="CameraRoll Add"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			private const CAMERA_ROLL_ADD:String = "camera_roll_add";
+			
+			private var ml:ModelLocator;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				this.testCameraRollAdd();
+			}
+			
+			private function onViewDeactivate():void
+			{
+			}
+			
+			private function testCameraRollAdd():void
+			{
+				if (!CameraRoll.supportsAddBitmapData)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_ADD, false, "Can't add to camera roll.");
+					this.navBar.testComplete(false, "Can't add to CameraRoll");
+					return;
+				}
+				
+				var cameraRoll:CameraRoll = new CameraRoll();
+				cameraRoll.addEventListener(Event.COMPLETE, onBitmapDataAdded);
+				cameraRoll.addEventListener(ErrorEvent.ERROR, onError);
+				var testBitmap:Bitmap = new this.ml.AdobeAIRLogoClass();
+				cameraRoll.addBitmapData(testBitmap.bitmapData);
+			}
+			
+			private function onBitmapDataAdded(e:Event):void
+			{
+				var cameraRoll:CameraRoll = e.target as CameraRoll;
+				cameraRoll.removeEventListener(Event.COMPLETE, onBitmapDataAdded);
+				cameraRoll.removeEventListener(ErrorEvent.ERROR, onError);
+				this.output.text = "The image above was added to your camera roll.";
+				this.imageOutput.source = ml.AdobeAIRLogoClass;
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_ADD, true, "Adding to camera roll successful.");
+				this.navBar.testComplete(true, "Image added!");
+			}
+			
+			private function onError(e:ErrorEvent):void
+			{
+				var cameraRoll:CameraRoll = e.target as CameraRoll;
+				cameraRoll.removeEventListener(Event.COMPLETE, onBitmapDataAdded);
+				cameraRoll.removeEventListener(ErrorEvent.ERROR, onError);
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_ADD, false, e.text);
+				this.navBar.testComplete(false, "Adding failed");
+			}
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="20">
+		<s:Image id="imageOutput"/>
+		<components:MultiLineLabel id="output" width="80%" height="90"/>
+	</s:VGroup>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

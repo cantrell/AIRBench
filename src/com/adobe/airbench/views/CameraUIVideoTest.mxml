@@ -2,26 +2,22 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:components="com.adobe.airbench.components.*"
-		title="CameraUI Image"
+		title="CameraUI Video"
 		viewActivate="onViewActivate();"
 		viewDeactivate="onViewDeactivate();">
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.airbench.model.ModelLocator;
 			
-			import mx.core.UIComponent;
-			
-			private const CAMERA_UI_IMAGE:String = "camera_ui_image";
-			private const IMAGE_SIZE:uint = 400;
+			private const CAMERA_UI_VIDEO:String = "camera_ui_video";
 			private var ml:ModelLocator;
-			private var tmpFile:File;
 			
 			private function onViewActivate():void
 			{
 				this.ml = ModelLocator.getInstance();
 				this.testCameraUI();
 			}
-
+			
 			private function onViewDeactivate():void
 			{
 			}
@@ -31,7 +27,7 @@
 				if (!CameraUI.isSupported)
 				{
 					this.launchButton.enabled = false;
-					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, false, "CameraUI.isSupported returns false.");
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_VIDEO, false, "CameraUI.isSupported returns false.");
 					this.navBar.testComplete(false, "Camera UI unsupported");
 					return;
 				}
@@ -43,8 +39,8 @@
 				var cameraUI:CameraUI = new CameraUI();
 				cameraUI.addEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
 				cameraUI.addEventListener(Event.CANCEL, onCameraUICanceled);
-				cameraUI.addEventListener(ErrorEvent.ERROR, onCameraError);
-				cameraUI.launch(MediaType.IMAGE);
+				cameraUI.addEventListener(ErrorEvent.ERROR, onError);
+				cameraUI.launch(MediaType.VIDEO);
 			}
 			
 			private function onCameraUIComplete(e:MediaEvent):void
@@ -52,16 +48,17 @@
 				var cameraUI:CameraUI = e.target as CameraUI;
 				cameraUI.removeEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
 				cameraUI.removeEventListener(Event.CANCEL, onCameraUICanceled);
-				cameraUI.removeEventListener(ErrorEvent.ERROR, onCameraError);
+				cameraUI.removeEventListener(ErrorEvent.ERROR, onError);
 				if (!e.data || !e.data.file || e.data.file.size == 0)
 				{
-					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, false, "Image data empty.");
-					this.navBar.testComplete(false, "Image data empty");
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_VIDEO, false, "Empty video file.");
+					this.navBar.testComplete(false, "Video file empty");
 					return;
 				}
-				this.imageDisplay.source = e.data.file.url;
-				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, true, "The Camera UI works for taking pictures.");
-				this.navBar.testComplete(true, "Camera UI works!");
+				var videoFile:File = e.data.file;
+				this.videoFileSize.text = String(videoFile.size) + " bytes recorded.";
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_VIDEO, true, "The Camera UI works for taking video.");
+				this.navBar.testComplete(true, "Video works!");
 			}
 			
 			private function onCameraUICanceled(e:Event):void
@@ -69,24 +66,26 @@
 				var cameraUI:CameraUI = e.target as CameraUI;
 				cameraUI.removeEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
 				cameraUI.removeEventListener(Event.CANCEL, onCameraUICanceled);
-				cameraUI.removeEventListener(ErrorEvent.ERROR, onCameraError);
-				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, false, "CameraUI canceled.");
-				this.navBar.testComplete(false, "CameraUI canceled");
+				cameraUI.removeEventListener(ErrorEvent.ERROR, onError);
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_VIDEO, false, "Video capture canceled.");
+				this.navBar.testComplete(false, "Video canceled");
+				
 			}
-
-			private function onCameraError(e:ErrorEvent):void
+			
+			private function onError(e:ErrorEvent):void
 			{
 				var cameraUI:CameraUI = e.target as CameraUI;
 				cameraUI.removeEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
 				cameraUI.removeEventListener(Event.CANCEL, onCameraUICanceled);
-				cameraUI.removeEventListener(ErrorEvent.ERROR, onCameraError);
-				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, false, e.text);
-				this.navBar.testComplete(false, "CameraUI error");
+				cameraUI.removeEventListener(ErrorEvent.ERROR, onError);
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_VIDEO, false, e.text);
+				this.navBar.testComplete(false, "Video failed");
 			}
+			
 		]]>
 	</fx:Script>
-	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-		<s:Image id="imageDisplay" width="400" height="400"/>
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
+		<s:Label id="videoFileSize"/>
 		<s:Button id="launchButton" label="Launch Camera UI" click="onLaunchCameraUI(event)" enabled="false"/>
 	</s:VGroup>
 	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>

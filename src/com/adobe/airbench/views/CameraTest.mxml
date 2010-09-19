@@ -2,17 +2,16 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:components="com.adobe.airbench.components.*"
-		title="Camera Test"
+		title="Camera"
 		viewActivate="onViewActivate();"
 		viewDeactivate="onViewDeactivate();">
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.airbench.model.ModelLocator;
 			
-			import mx.collections.ArrayCollection;
 			import mx.core.UIComponent;
 
-			private const TEST_ID:String = "camera";
+			private const CAMERA:String = "camera";
 			
 			private var ml:ModelLocator;
 			private var video:Video;
@@ -37,7 +36,7 @@
 			{
 				if (!Camera.isSupported)
 				{
-					this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, false, "Camera.isSupported returns false.");
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA, false, "Camera.isSupported returns false.");
 					this.navBar.testComplete(false, "Camera unsupported");
 					return;
 				}
@@ -45,7 +44,7 @@
 				var cam:Camera = Camera.getCamera();
 				if (cam == null)
 				{
-					this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, false, "Camera.getCamera returns null.");
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA, false, "Camera.getCamera returns null.");
 					this.navBar.testComplete(false, "Camera is null");
 				}
 				else
@@ -70,12 +69,12 @@
 			{
 				var cam:Camera = e.target as Camera;
 				cam.removeEventListener(ActivityEvent.ACTIVITY, onCameraActivity);
-				this.ml.testManager.reportCapabilitiesTestResults(TEST_ID, true, "Your device's camera works.");
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA, true, "Your device's camera works.");
 				this.navBar.testComplete(true, "Camera works!");
 			}
 		]]>
 	</fx:Script>
-	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
 		<s:Group id="videoDisplay" width="320" height="240"/>
 	</s:VGroup>
 	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Multitouch"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();"
+		touchBegin="onTouchBegin(event);" touchEnd="onTouchEnd(event);">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			import mx.collections.ArrayCollection;
+			
+			private const MULTITOUCH:String = "multitouch";
+			private var ml:ModelLocator;
+			[Bindable] private var touchPoints:ArrayCollection;
+			private var testPassed:Boolean;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				this.touchPoints = new ArrayCollection();
+				this.testPassed = false;
+				this.instructions.text = "Place " + Multitouch.maxTouchPoints + " fingers on screen.";
+				if (!Multitouch.supportsTouchEvents)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(MULTITOUCH, false, "Multitouch not supported.");
+					this.navBar.testComplete(false, "Multitouch unsupported");
+					return;
+				}
+				
+				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			}
+			
+			private function onViewDeactivate():void
+			{
+			}
+			
+			private function onTouchBegin(e:TouchEvent):void
+			{
+				if (this.touchPoints.contains(e.touchPointID)) return;
+				this.touchPoints.addItem(e.touchPointID);
+				if (!this.testPassed && this.touchPoints.length == Multitouch.maxTouchPoints)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(MULTITOUCH, true, "All " + Multitouch.maxTouchPoints + " touchpoints registered.");
+					this.navBar.testComplete(true, "Multitouch works!");
+					this.testPassed = true;
+				}
+			}
+			
+			private function onTouchEnd(e:TouchEvent):void
+			{
+				for (var i:uint = 0; i < this.touchPoints.length; ++i)
+				{
+					if (this.touchPoints.getItemAt(i) == e.touchPointID)
+					{
+						this.touchPoints.removeItemAt(i);
+						return;
+					}
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Label id="instructions" horizontalCenter="0" top="100"/>
+	<s:Label text="{this.touchPoints.length}" verticalCenter="0" horizontalCenter="0" fontSize="60"/>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

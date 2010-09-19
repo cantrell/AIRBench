@@ -95,6 +95,6 @@
 		</s:List>
 	</s:VGroup>
 	
-	<components:NavigationBar left="0" right="0" bottom="0" showStatusTest="false"/>
+	<!--<components:NavigationBar left="0" right="0" bottom="0" showStatusTest="false"/>-->
 
 </s:View>

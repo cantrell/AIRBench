@@ -36,7 +36,7 @@
 				if (!showStatusText)
 				{
 					this.backButton.enabled = true;
-					this.nextButton.enabled = true;
+					this.nextButton.label = "Next";
 				}
 			}
 			
@@ -63,12 +63,12 @@
 				}
 				
 				this.backButton.enabled = true;
-				this.nextButton.enabled = true;
+				this.nextButton.label = "Next";
 			}
 		]]>
 	</fx:Script>
 	<s:Button id="backButton" label="Back" click="onPreviousView();" left="4" bottom="4" enabled="false"/>
-	<s:Button id="nextButton" label="Next" click="onNextView();" right="4" bottom="4" enabled="false"/>
+	<s:Button id="nextButton" label="Skip" click="onNextView();" right="4" bottom="4" enabled="true"/>
 	<s:Label id="testStatus" text="Running test..." bottom="38" horizontalCenter="0"/>
 	<s:Label id="testResult" text="" bottom="8" horizontalCenter="0"/>
 </s:Group>

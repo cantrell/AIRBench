@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Accelerometer"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			import flash.sensors.Accelerometer;
+			
+			private const ACCELEROMETER:String = "accelerometer";
+			private var ml:ModelLocator;
+			private var acc:Accelerometer;
+			private var updateCalled:Boolean;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				this.updateCalled = false;
+				if (!Accelerometer.isSupported)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(ACCELEROMETER, false, "Accelerometer not supported.");
+					this.navBar.testComplete(false, "Accelerometer unsupported");
+					return;
+				}
+				this.testAccelerometer();
+			}
+			
+			private function onViewDeactivate():void
+			{
+				if (this.acc != null)
+				{
+					this.acc.removeEventListener(AccelerometerEvent.UPDATE, onUpdate);
+					this.acc.removeEventListener(StatusEvent.STATUS, onStatus);
+					this.acc = null;
+				}
+			}
+			
+			private function testAccelerometer():void
+			{
+				this.acc = new Accelerometer();
+				this.acc.addEventListener(AccelerometerEvent.UPDATE, onUpdate);
+				this.acc.addEventListener(StatusEvent.STATUS, onStatus);
+			}
+			
+			private function onUpdate(e:AccelerometerEvent):void
+			{
+				this.accelerationX.text = String(e.accelerationX);
+				this.accelerationY.text = String(e.accelerationY);
+				this.accelerationZ.text = String(e.accelerationZ);
+				if (!this.updateCalled)
+				{
+					this.updateCalled = true;
+					this.ml.testManager.reportCapabilitiesTestResults(ACCELEROMETER, true, "Accelerometer data available.");
+					this.navBar.testComplete(true, "Accelerometer works!");
+				}
+			}
+			
+			private function onStatus(e:StatusEvent):void
+			{
+				if (!this.acc) return;
+				if (this.acc.muted)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(ACCELEROMETER, false, "Accelerometer is muted.");
+					this.navBar.testComplete(false, "Accelerometer muted");
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Label text="X:" right="350" y="200"/>	
+	<s:Label text="Y:" right="350" y="250"/>	
+	<s:Label text="Z:" right="350" y="300"/>	
+	
+	<s:Label id="accelerationX" left="150" y="200" text="0"/>	
+	<s:Label id="accelerationY" left="150" y="250" text="0"/>	
+	<s:Label id="accelerationZ" left="150" y="300" text="0"/>	
+	
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>
