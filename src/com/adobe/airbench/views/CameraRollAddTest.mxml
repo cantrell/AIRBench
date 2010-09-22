@@ -10,6 +10,7 @@
 			import com.adobe.airbench.model.ModelLocator;
 			
 			private const CAMERA_ROLL_ADD:String = "camera_roll_add";
+			[Embed(source="assets/adobe_air_logo.jpg")] private var AdobeAIRLogoClass:Class;
 			
 			private var ml:ModelLocator;
 			
@@ -35,7 +36,7 @@
 				var cameraRoll:CameraRoll = new CameraRoll();
 				cameraRoll.addEventListener(Event.COMPLETE, onBitmapDataAdded);
 				cameraRoll.addEventListener(ErrorEvent.ERROR, onError);
-				var testBitmap:Bitmap = new this.ml.AdobeAIRLogoClass();
+				var testBitmap:Bitmap = new this.AdobeAIRLogoClass();
 				cameraRoll.addBitmapData(testBitmap.bitmapData);
 			}
 			
@@ -45,7 +46,7 @@
 				cameraRoll.removeEventListener(Event.COMPLETE, onBitmapDataAdded);
 				cameraRoll.removeEventListener(ErrorEvent.ERROR, onError);
 				this.output.text = "The image above was added to your camera roll.";
-				this.imageOutput.source = ml.AdobeAIRLogoClass;
+				this.imageOutput.source = this.AdobeAIRLogoClass;
 				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_ADD, true, "Adding to camera roll successful.");
 				this.navBar.testComplete(true, "Image added!");
 			}
@@ -60,7 +61,7 @@
 			}
 		]]>
 	</fx:Script>
-	<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="20">
+	<s:VGroup width="100%" height="90%" verticalAlign="middle" horizontalAlign="center" gap="20">
 		<s:Image id="imageOutput"/>
 		<components:MultiLineLabel id="output" width="80%" height="90"/>
 	</s:VGroup>

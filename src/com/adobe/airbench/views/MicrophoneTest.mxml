@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Microphone"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			import mx.core.UIComponent;
+			
+			private const MICROPHONE:String = "microphone";
+			private var ml:ModelLocator;
+			private var mic:Microphone;
+			private var timer:Timer;
+			private var lastDotCnt:uint;
+			private var testComplete:Boolean;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				this.mic = Microphone.getMicrophone();
+				if (this.mic == null)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(MICROPHONE, false, "Can't get a Microphone instnace.");
+					this.navBar.testComplete(false, "Microphone failed");
+					return;
+				}
+				this.testComplete = false;
+				this.mic.addEventListener(StatusEvent.STATUS, onStatus);
+				this.mic.addEventListener(ActivityEvent.ACTIVITY, onActivity);
+				this.mic.setSilenceLevel(5, 1000);
+				this.mic.setLoopBack(true);
+			}
+
+			private function onViewDeactivate():void
+			{
+				if (this.timer != null)
+				{
+					this.timer.removeEventListener(TimerEvent.TIMER, onCheckSound);
+					this.timer = null;
+				}
+				if (this.mic != null)
+				{
+					this.mic.removeEventListener(StatusEvent.STATUS, onStatus);
+					this.mic.removeEventListener(ActivityEvent.ACTIVITY, onActivity);
+					this.mic.setLoopBack(false);
+					this.mic = null;
+				}
+			}
+
+			private function onStatus(e:StatusEvent):void
+			{
+				if (this.mic.muted)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(MICROPHONE, false, "Microphone is muted.");
+					this.navBar.testComplete(false, "Microphone muted");
+				}
+			}
+			
+			public function onActivity(e:ActivityEvent):void
+			{
+				if (e.activating)
+				{
+					this.lastDotCnt = 0;
+					this.timer = new Timer(100);
+					this.timer.addEventListener(TimerEvent.TIMER, onCheckSound);
+					this.timer.start();
+					if (!this.testComplete)
+					{
+						this.testComplete = true;
+						this.ml.testManager.reportCapabilitiesTestResults(MICROPHONE, true, "The microphone picked up sound.");
+						this.navBar.testComplete(true, "Microphone works!");
+					}
+				}
+				else
+				{
+					this.dotGroup.removeAllElements();
+					this.timer.stop();
+					this.timer.removeEventListener(TimerEvent.TIMER, onCheckSound);
+					this.timer = null;
+				}
+			}
+			
+			private function onCheckSound(e:TimerEvent):void
+			{
+				this.drawDots();
+			}
+			
+			private function drawDots():void
+			{
+				var dotCnt:uint = this.mic.activityLevel;
+				if (this.lastDotCnt == dotCnt) return;
+				this.lastDotCnt = dotCnt;
+				this.dotGroup.removeAllElements();
+				var dotSprite:Sprite = new Sprite();
+				for (var i:uint = 0; i < dotCnt; ++i)
+				{
+					var dot:Sprite = new Sprite();
+					dot.y = 0;
+					dot.x = i * 10;
+					dot.graphics.beginFill(0xAA0000, 1);
+					dot.graphics.drawRect(0, 0, 5, 30);
+					dot.graphics.endFill();
+					dotSprite.addChild(dot);
+				}
+				var uic:UIComponent = new UIComponent();
+				dotSprite.x = 0;
+				dotSprite.y = 0;
+				uic.addChild(dotSprite);
+				uic.x = (dotGroup.width / 2) - (dotSprite.width / 2);
+				this.dotGroup.addElement(uic);
+			}
+						
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="90%" horizontalAlign="center" verticalAlign="middle" gap="20">
+		<s:Label text="Make some noise to test your mic."/>
+		<s:Group id="dotGroup" width="100%" height="20" verticalCenter="0" horizontalCenter="0"/>
+		<s:Image source="@Embed('assets/microphone.png')"/>
+	</s:VGroup>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

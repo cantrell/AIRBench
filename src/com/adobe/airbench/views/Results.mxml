@@ -17,6 +17,11 @@
 			
 			import spark.events.IndexChangeEvent;
 			
+			[Bindable] [Embed(source="assets/perf_test_icon.png")]    public var PerfTestIconClass:Class;
+			[Bindable] [Embed(source="assets/test_failed_icon.png")]  public var TestFailedIconClass:Class;
+			[Bindable] [Embed(source="assets/test_passed_icon.png")]  public var TestPassedIconClass:Class;
+			[Bindable] [Embed(source="assets/test_not_run_icon.png")] public var TestNotRunIconClass:Class;
+			
 			private function onViewActivate():void
 			{
 				var testData:Vector.<Test> = ModelLocator.getInstance().testManager.getTests();
@@ -75,17 +80,17 @@
 								{
 									if (!item.complete)
 									{
-										return ModelLocator.getInstance().TestNotRunIconClass;
+										return outerDocument.TestNotRunIconClass;
 									}
 									if (item is PerformanceTest)
 									{
-										return ModelLocator.getInstance().PerfTestIconClass;
+										return outerDocument.PerfTestIconClass;
 									}
 									if (item.passed)
 									{
-										return ModelLocator.getInstance().TestPassedIconClass;
+										return outerDocument.TestPassedIconClass;
 									}
-									return ModelLocator.getInstance().TestFailedIconClass;
+									return outerDocument.TestFailedIconClass;
 								}
 							]]>
 						</fx:Script>

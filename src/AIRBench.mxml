@@ -19,6 +19,7 @@
 			CameraUIImageTest;
 			CameraUIVideoTest;
 			GeolocationTest;
+			MicrophoneTest;
 			MultitouchTest;
 			XMLTest;
 			Results;
@@ -97,9 +98,9 @@
 		]]>
 	</fx:Script>
 	<s:navigationContent>
-		<s:Button icon="{ModelLocator.getInstance().HomeIconClass}" click="onHome();"/>
+		<s:Button icon="@Embed('assets/home_icon.png')" click="onHome();"/>
 	</s:navigationContent>
 	<s:actionContent>
-		<s:Button icon="{ModelLocator.getInstance().ReportIconClass}" click="onViewResults();"/>
+		<s:Button icon="@Embed('assets/report_icon.png')" click="onViewResults();"/>
 	</s:actionContent>
 </s:MobileApplication>

@@ -65,7 +65,7 @@
 		<!-- <maxSize></maxSize> -->
 	<autoOrients>false</autoOrients>
     <fullScreen>false</fullScreen>
-  <visible>false</visible>
+  <visible>true</visible>
   </initialWindow>
 
     <!-- We recommend omitting the supportedProfiles element, -->
@@ -73,7 +73,7 @@
     <!-- devices supported by AIR. If you wish to restrict deployment -->
     <!-- (i.e., to only mobile devices) then add this element and list -->
     <!-- only the profiles which your application does support. -->
-    <supportedProfiles>desktop mobileDevice</supportedProfiles>
+    <supportedProfiles>mobileDevice</supportedProfiles>
 
 	<!-- The subpath of the standard default installation location to use. Optional. -->
 	<!-- <installFolder></installFolder> -->
@@ -129,16 +129,35 @@
 	<!-- </fileTypes> -->
 
 	<android>
+		<manifestAdditions> 
+			<![CDATA[
+				<manifest android:installLocation="auto">
+					<uses-permission android:name="android.permission.INTERNET"/>
+					<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+					<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+					<uses-permission android:name="android.permission.CAMERA"/>
+					<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+					<uses-feature android:required="true" android:name="android.hardware.touchscreen.multitouch"/>
+				</manifest>
+			]]>
+		</manifestAdditions>
+	</android>
+
+
+	<!--
+	<android>
 		<manifestAdditions>
 			<manifest>
 				<data>
-					&lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/&gt;
-					&lt;uses-permission android:name="android.permission.INTERNET"/&gt;
-					&lt;uses-permission android:name="android.permission.CAMERA"/&gt;
-					&lt;uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/&gt;
+					<![CDATA[
+						<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+						<uses-permission android:name="android.permission.INTERNET"/>
+						<uses-permission android:name="android.permission.CAMERA"/>
+						<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+					]]>
 				</data>
 			</manifest>
 		</manifestAdditions>
 	</android>
-
+-->
 </application>

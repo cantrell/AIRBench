@@ -74,7 +74,7 @@
 			}
 		]]>
 	</fx:Script>
-	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
+	<s:VGroup width="100%" height="90%" horizontalAlign="center" verticalAlign="middle" gap="20">
 		<s:Group id="videoDisplay" width="320" height="240"/>
 	</s:VGroup>
 	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>

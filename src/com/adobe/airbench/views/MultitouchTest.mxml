@@ -36,6 +36,7 @@
 			
 			private function onViewDeactivate():void
 			{
+				Multitouch.inputMode = MultitouchInputMode.NONE;
 			}
 			
 			private function onTouchBegin(e:TouchEvent):void

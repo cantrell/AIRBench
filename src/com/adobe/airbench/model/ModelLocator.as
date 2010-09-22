@@ -10,15 +10,6 @@ package com.adobe.airbench.model
 	{
 		private static var inst:ModelLocator;
 		
-		// Assets
-		[Bindable] [Embed(source="assets/home_icon.png")]         public var HomeIconClass:Class;
-		[Bindable] [Embed(source="assets/report_icon.png")]       public var ReportIconClass:Class;
-		[Bindable] [Embed(source="assets/perf_test_icon.png")]    public var PerfTestIconClass:Class;
-		[Bindable] [Embed(source="assets/test_failed_icon.png")]  public var TestFailedIconClass:Class;
-		[Bindable] [Embed(source="assets/test_passed_icon.png")]  public var TestPassedIconClass:Class;
-		[Bindable] [Embed(source="assets/test_not_run_icon.png")] public var TestNotRunIconClass:Class;
-		[Bindable] [Embed(source="assets/adobe_air_logo.jpg")]    public var AdobeAIRLogoClass:Class;
-		
 		// Public properties
 		public var navigationManager:NavigationManager;
 		public var testManager:TestManager;

@@ -51,11 +51,19 @@
 		</benchmarks>
 	</view>
 	<view order="9">
+		<className>com.adobe.airbench.views::MicrophoneTest</className>
+		<benchmarks>
+			<test id="microphone" displayName="Microphone" type="capability"/>
+		</benchmarks>
+	</view>
+	<!--
+	<view order="9">
 		<className>com.adobe.airbench.views::XMLTest</className>
 		<benchmarks>
 			<test id="xml_parsing_performance" displayName="XML Parsing Performance" type="performance"/>
 		</benchmarks>
 	</view>
+	 -->
 	<view order="10">
 		<className>com.adobe.airbench.views::Results</className>
 	</view>
