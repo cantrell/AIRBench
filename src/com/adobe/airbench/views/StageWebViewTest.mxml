@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="StageWebView"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			private const STAGE_WEB_VIEW:String = "stage_web_view";
+			private var ml:ModelLocator;
+			private var swv:StageWebView;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				if (!StageWebView.isSupported)
+				{
+					this.ml.testManager.reportCapabilitiesTestResults(STAGE_WEB_VIEW, false, "StageWebView is not supported.");
+					this.navBar.testComplete(false, "StageWebView failed");
+					return;
+				}
+				if (this.swv != null)
+				{
+					this.swv.addEventListener(ErrorEvent.ERROR, onError);
+					this.swv.addEventListener(Event.COMPLETE, onComplete);
+					this.swv.dispose();
+					this.swv = null;
+				}
+				this.swv = new StageWebView();
+				this.swv.addEventListener(ErrorEvent.ERROR, onError);
+				this.swv.addEventListener(Event.COMPLETE, onComplete);
+				this.swv.stage = this.stage;
+				this.swv.viewPort = new Rectangle(0, this.navigator.actionBar.height, this.width, (this.height - this.navBar.height));
+				var f:File = File.applicationDirectory.resolvePath("assets/swv_load_test.html");
+				var fs:FileStream = new FileStream();
+				fs.open(f, FileMode.READ);
+				var fBytes:ByteArray = new ByteArray();
+				fs.readBytes(fBytes);
+				this.swv.loadString(new String(fBytes));
+			}
+			
+			private function onViewDeactivate():void
+			{
+				this.swv.addEventListener(ErrorEvent.ERROR, onError);
+				this.swv.addEventListener(Event.COMPLETE, onComplete);
+				this.swv.dispose();
+				this.swv = null;
+			}
+			
+			private function onComplete(e:Event):void
+			{
+				this.ml.testManager.reportCapabilitiesTestResults(STAGE_WEB_VIEW, true, "StageWebView successfully tested.");
+				this.navBar.testComplete(true, "StageWebView works!");
+			}
+			
+			private function onError(e:ErrorEvent):void
+			{
+				this.ml.testManager.reportCapabilitiesTestResults(STAGE_WEB_VIEW, false, e.text);
+				this.navBar.testComplete(false, "StageWebView failed");
+			}
+			
+		]]>
+	</fx:Script>
+	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+</s:View>

@@ -21,6 +21,7 @@
 			GeolocationTest;
 			MicrophoneTest;
 			MultitouchTest;
+			StageWebViewTest;
 			XMLTest;
 			Results;
 			

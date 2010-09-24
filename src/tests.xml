@@ -56,6 +56,12 @@
 			<test id="microphone" displayName="Microphone" type="capability"/>
 		</benchmarks>
 	</view>
+	<view order="10">
+		<className>com.adobe.airbench.views::StageWebViewTest</className>
+		<benchmarks>
+			<test id="stage_web_view" displayName="StageWebView" type="capability"/>
+		</benchmarks>
+	</view>
 	<!--
 	<view order="9">
 		<className>com.adobe.airbench.views::XMLTest</className>
@@ -64,7 +70,7 @@
 		</benchmarks>
 	</view>
 	 -->
-	<view order="10">
+	<view order="11">
 		<className>com.adobe.airbench.views::Results</className>
 	</view>
 </nav>
