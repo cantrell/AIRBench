@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Test Title"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			private const MEMORY_ALLOCATION:String = "memory_allocation";
+			private var ml:ModelLocator;
+			private var size:uint = (1024 * 1024) * 2; // two MB
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				var kb:String = String(size / 1024) + " KB";
+				this.description.text = this.description.text.replace("$1", kb);
+				var startTime:Number = new Date().time;
+				var ba:ByteArray = new ByteArray();
+				ba.length = size;
+				var totalTime:Number = new Date().time - startTime;
+				this.output.text = "Allocation time: " + String(totalTime) + " ms";
+				this.ml.testManager.reportPerformanceTestResults(MEMORY_ALLOCATION, totalTime, "Memory allocated in " + String(totalTime) + " ms.");
+				this.navBar.testComplete(true, "Test Complete");
+				ba.clear();
+				ba = null;
+			}
+			
+			private function onViewDeactivate():void
+			{
+			}
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Scroller width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
+				<components:MultiLineLabel id="description" text="This test measures how long it takes to allocate $1 or memory."/>
+				<s:Label id="output" fontWeight="bold"/>
+			</s:VGroup>
+		</s:Scroller>
+		<components:NavigationBar id="navBar" width="100%"/>
+	</s:VGroup>
+</s:View>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="SQL"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			private const SQL:String = "sql";
+			private var ml:ModelLocator;
+			private const SQL_FILE_NAME:String = "test_file.db";
+			private var rows:uint = 1000;
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				this.description.text = this.description.text.replace("$1", rows);
+				
+				var db:File = File.applicationStorageDirectory.resolvePath(SQL_FILE_NAME);
+				var conn:SQLConnection = new SQLConnection();
+				conn.open(db);
+				var d:Date = new Date();
+				
+				var startTime:Number = new Date().time;
+				
+				// Create a table
+				var stmt:SQLStatement = new SQLStatement();
+				stmt.sqlConnection = conn;
+				stmt.text = "CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, last_name TEXT, account_created DATE, active BOOLEAN, last_order INTEGER);";
+				stmt.execute();
+				stmt = null;
+				
+				// Insert some rows
+				stmt = new SQLStatement();
+				stmt.sqlConnection = conn;
+				conn.begin();
+				stmt.text = "INSERT INTO accounts (first_name, last_name, account_created, active, last_order) VALUES (:first_name, :last_name, :account_created, :active, :last_order);";
+				for (var i:uint = 0; i < rows; ++i)
+				{
+					stmt.parameters[":first_name"]      = "Christian";
+					stmt.parameters[":last_name"]       = "Cantrell";
+					stmt.parameters[":account_created"] = d;
+					stmt.parameters[":active"]          = true;
+					stmt.parameters[":last_order"]      = i;
+					stmt.execute();
+				}
+				conn.commit();
+				stmt = null;
+				d = null;
+				
+				// Select some rows
+				stmt = new SQLStatement();
+				stmt.sqlConnection = conn;
+				stmt.text = "SELECT * FROM accounts";
+				stmt.execute();
+				var result:SQLResult = stmt.getResult();
+				stmt = null;
+				
+				// Delete some rows
+				stmt = new SQLStatement();
+				stmt.sqlConnection = conn;
+				stmt.text = "DELETE FROM accounts WHERE first_name = :first_name AND last_name = :last_name;";
+				stmt.parameters[":first_name"] = "Christian";
+				stmt.parameters[":last_name"] = "Cantrell";
+				stmt.execute();
+				stmt = null;
+				conn.close();
+				
+				var totalTime:Number = new Date().time - startTime;
+				
+				db = File.applicationStorageDirectory.resolvePath(SQL_FILE_NAME);
+				db.deleteFile();
+				db = null;
+				
+				this.output.text = "Total time: " + String(totalTime) + " ms";
+				this.ml.testManager.reportPerformanceTestResults(SQL, totalTime, "SQL operations took " + String(totalTime) + " ms.");
+				this.navBar.testComplete(true, "Test Complete");
+			}
+			
+			private function onViewDeactivate():void
+			{
+			}
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Scroller width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
+				<components:MultiLineLabel id="description" text="This test measures how long it takes to insert, select, and delete $1 rows of data in a SQL database."/>
+				<s:Label id="output" fontWeight="bold"/>
+			</s:VGroup>
+		</s:Scroller>
+		<components:NavigationBar id="navBar" width="100%"/>
+	</s:VGroup>
+</s:View>

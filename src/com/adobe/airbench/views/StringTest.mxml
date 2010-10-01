@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="String"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			private const STRING:String = "string";
+			private var ml:ModelLocator;
+			private var abc:String = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+				
+				var startTime:Number = new Date().time;
+				
+				var abcArray:Array = new Array();
+				var i:uint;
+
+				for (i = 0; i < abc.length; ++i)
+				{
+					abcArray.push(abc.charAt(i));
+				}
+
+				var abc2:String = abc;
+				
+				for (i = 0; i < abcArray.length; ++i)
+				{
+					var chr:String = abcArray[i];
+					abc2 += chr;
+					abc2.replace(chr);
+					abc.indexOf(chr);
+					abc.match(chr);
+					abc.search(chr);
+					abc.slice(i);
+					abc.substr(i);
+					abc.substring(i);
+					abc2.toUpperCase();
+					abc2.toLowerCase();
+				}
+				
+				var totalTime:Number = new Date().time - startTime;
+				
+				this.output.text = "Total time: " + String(totalTime) + " ms";
+				this.ml.testManager.reportPerformanceTestResults(STRING, totalTime, "String operation tests took " + String(totalTime) + " ms.");
+				this.navBar.testComplete(true, "Test Complete");
+			}
+			
+			private function onViewDeactivate():void
+			{
+			}
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Scroller width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
+				<components:MultiLineLabel id="description" text="This test measures how long it takes to perform several String ."/>
+				<s:Label id="output" fontWeight="bold"/>
+			</s:VGroup>
+		</s:Scroller>
+		<components:NavigationBar id="navBar" width="100%"/>
+	</s:VGroup>
+</s:View>
