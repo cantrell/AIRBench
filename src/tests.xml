@@ -93,15 +93,28 @@
 			<test id="string" displayName="String" type="performance"/>
 		</benchmarks>
 	</view>
+	<view order="16">
+		<className>com.adobe.airbench.views::ComputationTest</className>
+		<benchmarks>
+			<test id="computation_sha256" displayName="Computation (SHA256)" type="performance"/>
+			<test id="computation_solar_calc" displayName="Computation (Solar Calc)" type="performance"/>
+		</benchmarks>
+	</view>
 	-->
 	<view order="1">
 		<className>com.adobe.airbench.views::ComputationTest</className>
 		<benchmarks>
 			<test id="computation_sha256" displayName="Computation (SHA256)" type="performance"/>
-			<test id="computation_sunrise_sunset" displayName="Computation (Sunrise/Sunset)" type="performance"/>
+			<test id="computation_solar_calc" displayName="Computation (Solar Calc)" type="performance"/>
 		</benchmarks>
 	</view>
 	<view order="2">
+		<className>com.adobe.airbench.views::RenderingTest</className>
+		<benchmarks>
+			<test id="rendering" displayName="Rendering" type="performance"/>
+		</benchmarks>
+	</view>
+	<view order="3">
 		<className>com.adobe.airbench.views::Results</className>
 	</view>
 </nav>

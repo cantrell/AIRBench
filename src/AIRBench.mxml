@@ -24,6 +24,7 @@
 			MemoryAllocationTest;
 			MicrophoneTest;
 			MultitouchTest;
+			RenderingTest;
 			SQLTest;
 			StageWebViewTest;
 			StringTest;
