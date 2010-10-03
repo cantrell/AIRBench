@@ -2,6 +2,7 @@
 	<view order="0">
 		<className>com.adobe.airbench.views::Home</className>
 	</view>
+	<!--
 	<view order="1">
 		<className>com.adobe.airbench.views::CameraTest</className>
 		<benchmarks>
@@ -62,15 +63,45 @@
 			<test id="stage_web_view" displayName="StageWebView" type="capability"/>
 		</benchmarks>
 	</view>
-	<!--
-	<view order="9">
+	<view order="11">
 		<className>com.adobe.airbench.views::XMLTest</className>
 		<benchmarks>
-			<test id="xml_parsing_performance" displayName="XML Parsing Performance" type="performance"/>
+			<test id="xml_parsing" displayName="XML Parsing" type="performance"/>
 		</benchmarks>
 	</view>
-	 -->
-	<view order="11">
+	<view order="12">
+		<className>com.adobe.airbench.views::MemoryAllocationTest</className>
+		<benchmarks>
+			<test id="memory_allocation" displayName="Memory Allocation" type="performance"/>
+		</benchmarks>
+	</view>
+	<view order="13">
+		<className>com.adobe.airbench.views::FileAccessTest</className>
+		<benchmarks>
+			<test id="file_access" displayName="File Access" type="performance"/>
+		</benchmarks>
+	</view>
+	<view order="14">
+		<className>com.adobe.airbench.views::SQLTest</className>
+		<benchmarks>
+			<test id="sql" displayName="SQL" type="performance"/>
+		</benchmarks>
+	</view>
+	<view order="15">
+		<className>com.adobe.airbench.views::StringTest</className>
+		<benchmarks>
+			<test id="string" displayName="String" type="performance"/>
+		</benchmarks>
+	</view>
+	-->
+	<view order="1">
+		<className>com.adobe.airbench.views::ComputationTest</className>
+		<benchmarks>
+			<test id="computation_sha256" displayName="Computation (SHA256)" type="performance"/>
+			<test id="computation_sunrise_sunset" displayName="Computation (Sunrise/Sunset)" type="performance"/>
+		</benchmarks>
+	</view>
+	<view order="2">
 		<className>com.adobe.airbench.views::Results</className>
 	</view>
 </nav>

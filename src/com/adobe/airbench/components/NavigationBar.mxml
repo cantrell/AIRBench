@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark"
 		  creationComplete="onCreationComplete();">
 	<fx:Script>
@@ -11,22 +11,34 @@
 			import spark.effects.SlideViewTransition;
 			
 			private var navInfo:NavigationInfo;
+			private var _parent:View;
 			
 			private function onCreationComplete():void
 			{
-				this.navInfo = ModelLocator.getInstance().navigationManager.getNavigationInfo(getQualifiedClassName(this.parent));
+				this._parent = this.findParent();
+				this.navInfo = ModelLocator.getInstance().navigationManager.getNavigationInfo(getQualifiedClassName(this._parent));
 				if (this.navInfo.previousView == null) this.backButton.visible = false;
 				if (this.navInfo.nextView == null) this.nextButton.visible = false;
 			}
-				
+			
+			private function findParent(o:DisplayObject = null):View
+			{
+				if (o == null) o = this.parent;
+				if (o is View)
+				{
+					return o as View;
+				}
+				return this.findParent(o.parent);
+			}
+
 			private function onPreviousView():void
 			{
-				View(this.parent).navigator.popView();
+				View(this._parent).navigator.popView();
 			}
 			
 			private function onNextView():void
 			{
-				View(this.parent).navigator.pushView(this.navInfo.nextView);
+				View(this._parent).navigator.pushView(this.navInfo.nextView);
 			}
 			
 			public function set showStatusTest(showStatusText:Boolean):void
@@ -67,8 +79,10 @@
 			}
 		]]>
 	</fx:Script>
-	<s:Button id="backButton" label="Back" click="onPreviousView();" left="4" bottom="4" enabled="false"/>
-	<s:Button id="nextButton" label="Skip" click="onNextView();" right="4" bottom="4" enabled="true"/>
-	<s:Label id="testStatus" text="Running test..." bottom="38" horizontalCenter="0"/>
-	<s:Label id="testResult" text="" bottom="8" horizontalCenter="0"/>
-</s:Group>
+	<s:Button id="backButton" label="Back" click="onPreviousView();" enabled="false"/>
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+		<s:Label id="testStatus" text="Running test..." color="0xffffff"/>
+		<s:Label id="testResult" text="" color="0xffffff" fontSize="18"/>
+	</s:VGroup>
+	<s:Button id="nextButton" label="Skip" click="onNextView();" enabled="true"/>
+</s:HGroup>

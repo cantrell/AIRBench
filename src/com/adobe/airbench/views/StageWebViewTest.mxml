@@ -35,7 +35,7 @@
 				this.swv.addEventListener(Event.COMPLETE, onComplete);
 				this.swv.stage = this.stage;
 				this.swv.viewPort = new Rectangle(0, this.navigator.actionBar.height, this.width, (this.height - this.navBar.height));
-				var f:File = File.applicationDirectory.resolvePath("assets/swv_load_test.html");
+				var f:File = File.applicationDirectory.resolvePath("test_assets/swv_load_test.html");
 				var fs:FileStream = new FileStream();
 				fs.open(f, FileMode.READ);
 				var fBytes:ByteArray = new ByteArray();
@@ -65,5 +65,5 @@
 			
 		]]>
 	</fx:Script>
-	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+	<components:NavigationBar id="navBar" width="100%" bottom="0"/>
 </s:View>

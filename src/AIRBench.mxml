@@ -18,10 +18,15 @@
 			CameraTest;
 			CameraUIImageTest;
 			CameraUIVideoTest;
+			ComputationTest;
+			FileAccessTest;
 			GeolocationTest;
+			MemoryAllocationTest;
 			MicrophoneTest;
 			MultitouchTest;
+			SQLTest;
 			StageWebViewTest;
+			StringTest;
 			XMLTest;
 			Results;
 			

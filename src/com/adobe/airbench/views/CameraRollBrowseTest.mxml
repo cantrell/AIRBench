@@ -77,9 +77,13 @@
 			}
 		]]>
 	</fx:Script>
-	<s:VGroup width="100%" height="90%" verticalAlign="middle" horizontalAlign="center" gap="20">
-		<s:Image id="imageOutput" width="400" height="400"/>
-		<s:Button id="browseCameraRollButton" label="Browse Camera Roll" click="testCameraRollBrowse();" enabled="false"/>
+	<s:VGroup width="100%" height="100%">
+		<s:Scroller width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="20">
+				<s:Button id="browseCameraRollButton" label="Browse Camera Roll" click="testCameraRollBrowse();" enabled="false"/>
+				<s:Image id="imageOutput" width="400" height="400"/>
+			</s:VGroup>
+		</s:Scroller>
+		<components:NavigationBar id="navBar" width="100%"/>
 	</s:VGroup>
-	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
 </s:View>

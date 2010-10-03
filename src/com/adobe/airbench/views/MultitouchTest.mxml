@@ -65,7 +65,13 @@
 			
 		]]>
 	</fx:Script>
-	<s:Label id="instructions" horizontalCenter="0" top="100"/>
-	<s:Label text="{this.touchPoints.length}" verticalCenter="0" horizontalCenter="0" fontSize="60"/>
-	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+	<s:VGroup width="100%" height="100%">
+		<s:Scroller width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
+				<s:Label id="instructions" horizontalCenter="0" top="100"/>
+				<s:Label text="{this.touchPoints.length}" verticalCenter="0" horizontalCenter="0" fontSize="60"/>
+			</s:VGroup>
+		</s:Scroller>
+		<components:NavigationBar id="navBar" width="100%"/>
+	</s:VGroup>
 </s:View>

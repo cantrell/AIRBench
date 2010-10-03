@@ -10,7 +10,7 @@
 			<![CDATA[
 				import com.adobe.airbench.model.ModelLocator;
 				
-				private const XML_PARSING_PERFORMANCE:String = "xml_parsing_performance";
+				private const XML_PARSING:String = "xml_parsing";
 				private var ml:ModelLocator;
 				
 				private function onViewActivate():void
@@ -29,13 +29,16 @@
 					var fileBytes:ByteArray = new ByteArray();
 					fs.readBytes(fileBytes);
 					fs.close();
+					var kb:String = String(Math.round(fileBytes.length / 1000)) + " KB";
+					this.description.text = this.description.text.replace("$1", kb);
 					var startTime:Number = new Date().time;
 					var testXml:XML = new XML(fileBytes);
 					var parsedXml:String = testXml.toXMLString();
 					var totalTime:Number = new Date().time - startTime;
 					this.output.text = "XML Parse time: " + String(totalTime) + " ms";
-					this.ml.testManager.reportPerformanceTestResults(XML_PARSING_PERFORMANCE, totalTime, "XML document parsed in " + String(totalTime) + " ms.");
+					this.ml.testManager.reportPerformanceTestResults(XML_PARSING, totalTime, "XML document parsed in " + String(totalTime) + " ms.");
 					this.navBar.testComplete(true, "Test Complete");
+					System.disposeXML(testXml);
 				}
 				
 				private function onViewDeactivate():void
@@ -45,6 +48,13 @@
 				
 			]]>
 		</fx:Script>
-	<s:Label id="output" horizontalCenter="0" top="150" fontWeight="bold"/>
-	<components:NavigationBar id="navBar" left="0" right="0" bottom="0"/>
+	<s:VGroup width="100%" height="100%">
+		<s:Scroller width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="20">
+				<components:MultiLineLabel id="description" width="100%" text="This test measures how long it takes to parse a $1 XML file."/>
+				<s:Label id="output" horizontalCenter="0" fontWeight="bold"/>
+			</s:VGroup>
+		</s:Scroller>
+		<components:NavigationBar id="navBar" width="100%"/>
+	</s:VGroup>
 </s:View>
