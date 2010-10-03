@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:components="com.adobe.airbench.components.*"
+		title="Rendering"
+		viewActivate="onViewActivate();"
+		viewDeactivate="onViewDeactivate();">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.airbench.model.ModelLocator;
+			
+			import mx.core.UIComponent;
+			
+			private const RENDERING:String = "rendering";
+			private var ml:ModelLocator;
+			private var square:Sprite;
+			private var timer:Timer;
+			private var scaleFactor:Number;
+			private var frameCount:uint;
+			private var startTime:Number;
+
+			
+			private function onViewActivate():void
+			{
+				this.ml = ModelLocator.getInstance();
+
+				this.square = new Sprite();
+				this.square.cacheAsBitmap = true;
+				this.square.graphics.beginFill(0xff0000);
+				this.square.graphics.drawRect(-100, -100, 200, 200);
+				this.square.graphics.endFill();
+				this.square.cacheAsBitmapMatrix = new Matrix();
+				var uic:UIComponent = new UIComponent();
+				uic.x = 100;
+				uic.y = 100;
+				uic.addChild(square);
+				this.squareSpace.addElement(uic);
+				
+				this.frameCount = 0;
+				this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+				this.startTime = getTimer();
+				
+				this.timer = new Timer(5);
+				this.timer.addEventListener(TimerEvent.TIMER, onTick);
+				this.timer.start();
+			}
+			
+			private function onViewDeactivate():void
+			{
+				this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+				this.timer.stop();
+				this.timer.removeEventListener(TimerEvent.TIMER, onTick);
+				this.timer = null;
+			}
+			
+			private function onEnterFrame(e:Event):void
+			{
+				++this.frameCount;
+				var newTime:Number = getTimer();
+				if ((newTime - this.startTime) >= 1000)
+				{
+					this.startTime = getTimer();
+					this.output.text = String(this.frameCount) + "FPS";
+					this.ml.testManager.reportPerformanceTestResults(RENDERING, this.frameCount, "Rendering occurred at " + String(this.frameCount) + " FPS.");
+					this.navBar.testComplete(true, String(this.frameCount) + " FPS");
+					this.frameCount = 0;
+				}
+			}
+						
+			private function onTick(e:TimerEvent):void
+			{
+				var m:Matrix = this.square.transform.matrix;
+				m.rotate(.02);
+				if (this.square.scaleX <= 0.02)
+				{
+					this.scaleFactor = 1.01
+				}
+				if (this.square.scaleX >=1)
+				{
+					this.scaleFactor = .99;
+				}
+				m.scale(this.scaleFactor, this.scaleFactor);
+				this.square.alpha = this.square.scaleX;
+				this.square.transform.matrix = m;
+			}
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%">
+		<s:Scroller width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
+				<components:MultiLineLabel id="description" text="This test measures your rendering framerate."/>
+				<s:Group id="squareSpace" width="200" height="200"/>
+				<s:Label id="output" fontWeight="bold"/>
+			</s:VGroup>
+		</s:Scroller>
+		<components:NavigationBar id="navBar" width="100%"/>
+	</s:VGroup>
+</s:View>
