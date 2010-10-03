@@ -1,22 +1,39 @@
 package com.adobe.airbench.util
 {
 	/**
-	 * All the code to calculate sunrise and sunset times is a JavaScript to
-	 * ActionScript port of the NOAA Solar Calculator. The original project
-	 * can be found here: http://www.esrl.noaa.gov/gmd/grad/solcalc/
+	 * Most of this code is a port of the NOAA Solar Calculator found here:
+	 * 
+	 * http://www.esrl.noaa.gov/gmd/grad/solcalc/
+	 * 
+	 * It's great work, and I appreciate their contribtion to the public domain.
+	 * 
+	 * Note that this is not the most robust or well-tested code I've ever written
+	 * (or ported). It serves the purpose of a benchmark test, which is what I intended.
+	 * If you want to use this code as the basis of another project, I recommend you
+	 * bulletproof a little more. And don't forget to credit the NOAA folks.
+	 * 
 	 **/
-
 	public class SolarCalculator
 	{
 		public function SolarCalculator()
 		{
 		}
 		
+		/**
+		 * Get back on object with "sunrise" and "sunset" proterties. The format is HH:MM.
+		 * If sunrise or sunset doesn't occur at the specified location on the specified date,
+		 * the value will be null.
+		 **/
 		public static function getSunDataByDate(d:Date, lat:Number, lng:Number):Object
 		{
 			return getSunData(lat, lng, d.month + 1, d.date, d.fullYear, ((d.getTimezoneOffset() / 60) * -1), d.hours, d.minutes, d.seconds);
 		}
 		
+		/**
+		 * Get back on object with "sunrise" and "sunset" proterties. The format is HH:MM.
+		 * If sunrise or sunset doesn't occur at the specified location on the specified date,
+		 * the value will be null.
+		 **/
 		public static function getSunData(lat:Number, lng:Number, month:uint, day:uint, year:uint, utcOffset:int, hours:uint = 12, minutes:uint = 0, seconds:uint = 0):Object
 		{
 			var jday:Number = getJD(month, day, year);
