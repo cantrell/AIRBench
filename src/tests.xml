@@ -90,7 +90,7 @@
 	<view order="15">
 		<className>com.adobe.airbench.views::StringTest</className>
 		<benchmarks>
-			<test id="string" displayName="String" type="performance"/>
+			<test id="string_ops" displayName="String" type="performance"/>
 		</benchmarks>
 	</view>
 	<view order="16">
@@ -102,19 +102,12 @@
 	</view>
 	-->
 	<view order="1">
-		<className>com.adobe.airbench.views::ComputationTest</className>
-		<benchmarks>
-			<test id="computation_sha256" displayName="Computation (SHA256)" type="performance"/>
-			<test id="computation_solar_calc" displayName="Computation (Solar Calc)" type="performance"/>
-		</benchmarks>
-	</view>
-	<view order="2">
 		<className>com.adobe.airbench.views::RenderingTest</className>
 		<benchmarks>
 			<test id="rendering" displayName="Rendering" type="performance"/>
 		</benchmarks>
 	</view>
-	<view order="3">
+	<view order="2">
 		<className>com.adobe.airbench.views::Results</className>
 	</view>
 </nav>

@@ -20,7 +20,7 @@ package com.adobe.airbench.util
 		}
 		
 		/**
-		 * Get back on object with "sunrise" and "sunset" proterties. The format is HH:MM.
+		 * Get back on object with "sunrise" and "sunset" properties. The format is HH:MM.
 		 * If sunrise or sunset doesn't occur at the specified location on the specified date,
 		 * the value will be null.
 		 **/
@@ -30,7 +30,7 @@ package com.adobe.airbench.util
 		}
 		
 		/**
-		 * Get back on object with "sunrise" and "sunset" proterties. The format is HH:MM.
+		 * Get back on object with "sunrise" and "sunset" properties. The format is HH:MM.
 		 * If sunrise or sunset doesn't occur at the specified location on the specified date,
 		 * the value will be null.
 		 **/

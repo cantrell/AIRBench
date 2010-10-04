@@ -11,6 +11,8 @@
 			import com.adobe.airbench.tests.Test;
 			import com.adobe.airbench.tests.TestManager;
 			import com.adobe.airbench.views.*;
+			
+			import mx.utils.UIDUtil;
 
 			AccelerometerTest;
 			CameraRollAddTest;
@@ -40,6 +42,7 @@
 				this.navigator.actionBar.setStyle("titleAlign", "center");
 				this.ml = ModelLocator.getInstance();
 				this.initializeTestData();
+				this.initializeUUID();
 				this.ml.testManager.addEventListener(Event.COMPLETE, onAllTestsComplete);
 			}
 
@@ -86,6 +89,20 @@
 				navigationManager.setNavigationData(navData);
 				this.ml.navigationManager = navigationManager;
 				this.ml.testManager = testManager;
+			}
+			
+			private function initializeUUID():void
+			{
+				var so:SharedObject = SharedObject.getLocal(ModelLocator.SO_KEY);
+				var uuid:String = so.data[ModelLocator.UUID_KEY];
+				if (uuid == null)
+				{
+					uuid = UIDUtil.createUID();
+					so.data[ModelLocator.UUID_KEY] = uuid;
+					so.flush();
+				}
+				this.ml.uuid = uuid;
+				trace(this.ml.uuid);
 			}
 
 			private function onHome():void

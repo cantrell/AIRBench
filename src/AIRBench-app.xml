@@ -24,7 +24,7 @@
 		<!-- The main SWF or HTML file of the application. Required. -->
 		<!-- Note: In Flash Builder, the SWF reference is set automatically. -->
 		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
-		
+		<renderMode>cpu</renderMode>
 		<!-- The title of the main window. Optional. -->
 		<!-- <title></title> -->
 
@@ -63,7 +63,7 @@
 
 		<!-- The window's initial maximum size, specified as a width/height pair in pixels, such as "1600 1200". Optional. -->
 		<!-- <maxSize></maxSize> -->
-	<autoOrients>true</autoOrients>
+	<autoOrients>false</autoOrients>
     <fullScreen>false</fullScreen>
   <visible>true</visible>
   </initialWindow>

@@ -15,21 +15,25 @@
 			private const RENDERING:String = "rendering";
 			private var ml:ModelLocator;
 			private var square:Sprite;
-			private var timer:Timer;
 			private var scaleFactor:Number;
 			private var frameCount:uint;
 			private var startTime:Number;
-
+			private var defaultFrameRate:uint;
+			private const TARGET_FPS:uint = 70;
+			private var frTestCnt:int = 0;
 			
 			private function onViewActivate():void
 			{
 				this.ml = ModelLocator.getInstance();
 
+				this.defaultFrameRate = this.stage.frameRate;				
+				this.stage.frameRate = TARGET_FPS;
+				
 				this.square = new Sprite();
-				this.square.cacheAsBitmap = true;
 				this.square.graphics.beginFill(0xff0000);
 				this.square.graphics.drawRect(-100, -100, 200, 200);
 				this.square.graphics.endFill();
+				this.square.cacheAsBitmap = true;
 				this.square.cacheAsBitmapMatrix = new Matrix();
 				var uic:UIComponent = new UIComponent();
 				uic.x = 100;
@@ -40,39 +44,47 @@
 				this.frameCount = 0;
 				this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 				this.startTime = getTimer();
-				
-				this.timer = new Timer(5);
-				this.timer.addEventListener(TimerEvent.TIMER, onTick);
-				this.timer.start();
 			}
 			
 			private function onViewDeactivate():void
 			{
+				this.stage.frameRate = this.defaultFrameRate;
 				this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-				this.timer.stop();
-				this.timer.removeEventListener(TimerEvent.TIMER, onTick);
-				this.timer = null;
 			}
 			
 			private function onEnterFrame(e:Event):void
 			{
-				++this.frameCount;
-				var newTime:Number = getTimer();
-				if ((newTime - this.startTime) >= 1000)
+				this.onTick();
+				if ((getTimer() - this.startTime) >= 1000)
 				{
 					this.startTime = getTimer();
-					this.output.text = String(this.frameCount) + "FPS";
-					this.ml.testManager.reportPerformanceTestResults(RENDERING, this.frameCount, "Rendering occurred at " + String(this.frameCount) + " FPS.");
-					this.navBar.testComplete(true, String(this.frameCount) + " FPS");
+					if (frTestCnt == 5)
+					{
+						var fpsPercent:uint = Math.round((this.frameCount / TARGET_FPS) * 100);
+						this.fpsOutput.text = String(this.frameCount) + " FPS";
+						this.percentOutput.text = String(fpsPercent) + "% target FPS";
+						var framesDropped:uint = TARGET_FPS - this.frameCount;
+						var plural:String = (framesDropped != 1) ? "s" : "";
+						this.droppedOutput.text = String(framesDropped) + " frame" + plural + " dropped";
+						this.ml.testManager.reportPerformanceTestResults(RENDERING, framesDropped, "Rendering occurred at " + String(this.frameCount) + " FPS ("+fpsPercent+")%.");
+						this.navBar.testComplete(true, String(fpsPercent) + "% target FPS");
+						++this.frTestCnt;
+					}
+					else
+					{
+						++this.frTestCnt;
+					}
 					this.frameCount = 0;
+					return;
 				}
+				++this.frameCount;
 			}
-						
-			private function onTick(e:TimerEvent):void
+
+			private function onTick():void
 			{
 				var m:Matrix = this.square.transform.matrix;
 				m.rotate(.02);
-				if (this.square.scaleX <= 0.02)
+				if (this.square.scaleX <= 0.09)
 				{
 					this.scaleFactor = 1.01
 				}
@@ -92,7 +104,9 @@
 			<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" gap="20">
 				<components:MultiLineLabel id="description" text="This test measures your rendering framerate."/>
 				<s:Group id="squareSpace" width="200" height="200"/>
-				<s:Label id="output" fontWeight="bold"/>
+				<s:Label id="fpsOutput" fontWeight="bold"/>
+				<s:Label id="percentOutput" fontWeight="bold"/>
+				<s:Label id="droppedOutput" fontWeight="bold"/>
 			</s:VGroup>
 		</s:Scroller>
 		<components:NavigationBar id="navBar" width="100%"/>
