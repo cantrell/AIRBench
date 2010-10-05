@@ -2,7 +2,6 @@
 	<view order="0">
 		<className>com.adobe.airbench.views::Home</className>
 	</view>
-	<!--
 	<view order="1">
 		<className>com.adobe.airbench.views::CameraTest</className>
 		<benchmarks>
@@ -100,14 +99,13 @@
 			<test id="computation_solar_calc" displayName="Computation (Solar Calc)" type="performance"/>
 		</benchmarks>
 	</view>
-	-->
-	<view order="1">
+	<view order="17">
 		<className>com.adobe.airbench.views::RenderingTest</className>
 		<benchmarks>
 			<test id="rendering" displayName="Rendering" type="performance"/>
 		</benchmarks>
 	</view>
-	<view order="2">
+	<view order="18">
 		<className>com.adobe.airbench.views::Results</className>
 	</view>
 </nav>

@@ -11,6 +11,7 @@
 			import com.adobe.airbench.tests.CapabilityTest;
 			import com.adobe.airbench.tests.PerformanceTest;
 			import com.adobe.airbench.tests.Test;
+			import com.adobe.airbench.tests.TestManager;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.IndexChangedEvent;
@@ -22,9 +23,16 @@
 			[Bindable] [Embed(source="assets/test_passed_icon.png")]  public var TestPassedIconClass:Class;
 			[Bindable] [Embed(source="assets/test_not_run_icon.png")] public var TestNotRunIconClass:Class;
 			
+			private var ml:ModelLocator;
+			
 			private function onViewActivate():void
 			{
-				var testData:Vector.<Test> = ModelLocator.getInstance().testManager.getTests();
+				this.ml = ModelLocator.getInstance();
+				var testManager:TestManager = ml.testManager;
+				
+				this.submitButton.enabled = testManager.areAllTestsComplete();
+				
+				var testData:Vector.<Test> = testManager.getTests();
 				var capabilityTestData:Array = new Array();
 				var performanceTestData:Array = new Array();
 				for each (var test:Test in testData)
@@ -49,10 +57,60 @@
 				var navInfo:NavigationInfo = ModelLocator.getInstance().navigationManager.getNavigationInfo(selectedTest.viewClassName);
 				this.navigator.pushView(navInfo.thisView);
 			}
+			
+			private function onSubmitResults():void
+			{
+				var tests:Vector.<Test> = this.ml.testManager.getTests();
+				var vars:URLVariables = new URLVariables();
+
+				vars["uuid"]                    = this.ml.uuid;
+				vars["device_cpu"]              = Capabilities.cpuArchitecture;
+				vars["device_manufacturer"]     = Capabilities.manufacturer;
+				vars["device_os"]               = Capabilities.os;
+				vars["device_version"]          = Capabilities.version;
+				
+				for each (var test:Test in tests)
+				{
+					vars[test.testId] = (test is PerformanceTest) ? PerformanceTest(test).value : CapabilityTest(test).passed;
+					vars[test.testId + "_name"] = test.displayName;
+				}
+				
+				var req:URLRequest = new URLRequest("http://airbenchmark.com/TestResults/save");
+				req.method = URLRequestMethod.POST;
+				req.data = vars;
+				var loader:URLLoader = new URLLoader();
+				loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+				loader.addEventListener(Event.COMPLETE, onComplete);
+				loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onResponseStatus);
+				loader.load(req);
+			}
+			
+			private function onIOError(e:IOErrorEvent):void
+			{
+				trace("onIOError", e.text);
+				var loader:URLLoader = e.target as URLLoader;
+				loader.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
+				loader.removeEventListener(Event.COMPLETE, onComplete);
+				loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onResponseStatus);
+			}
+			
+			private function onResponseStatus(e:HTTPStatusEvent):void
+			{
+				trace("onResponseStatus", e.status);
+			}
+			
+			private function onComplete(e:Event):void
+			{
+				trace("onComplete");
+				var loader:URLLoader = e.target as URLLoader;
+				loader.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
+				loader.removeEventListener(Event.COMPLETE, onComplete);
+				loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onResponseStatus);
+			}
 		]]>
 	</fx:Script>
 	
-	<s:VGroup width="100%" height="100%">
+	<s:VGroup width="100%" height="100%" horizontalAlign="center">
 		<components:MultiLineLabel text="Below are your test results." width="100%"/>
 		<s:List id="resultsList" width="100%" height="100%" change="onTestSelected(event);">
 			<s:itemRenderer>
@@ -98,6 +156,7 @@
 				</fx:Component>
 			</s:itemRenderer>
 		</s:List>
+		<s:Button id="submitButton" label="Submit Results to Adobe" click="onSubmitResults();"/>
 	</s:VGroup>
 	
 	<!--<components:NavigationBar left="0" right="0" bottom="0" showStatusTest="false"/>-->

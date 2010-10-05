@@ -63,7 +63,7 @@ package com.adobe.airbench.tests
 					test.message = message;
 					if (test is PerformanceTest)
 					{
-						PerformanceTest(test).time = data;
+						PerformanceTest(test).value = data;
 					}
 					else if (test is CapabilityTest)
 					{

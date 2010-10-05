@@ -2,7 +2,7 @@ package com.adobe.airbench.tests
 {
 	public class PerformanceTest extends Test
 	{
-		public var time:Number;
+		public var value:Number;
 		
 		public function PerformanceTest(testId:String, displayName:String):void
 		{

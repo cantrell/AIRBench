@@ -102,7 +102,6 @@
 					so.flush();
 				}
 				this.ml.uuid = uuid;
-				trace(this.ml.uuid);
 			}
 
 			private function onHome():void

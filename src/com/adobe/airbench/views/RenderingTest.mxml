@@ -48,6 +48,7 @@
 			
 			private function onViewDeactivate():void
 			{
+				this.squareSpace.removeAllElements();
 				this.stage.frameRate = this.defaultFrameRate;
 				this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			}
