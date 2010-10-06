@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark"
-		  creationComplete="onCreationComplete();">
+		  creationComplete="onCreationComplete();" paddingBottom="4" paddingLeft="4" paddingRight="4">
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.airbench.model.ModelLocator;

@@ -14,7 +14,6 @@
 			import com.adobe.airbench.tests.TestManager;
 			
 			import mx.collections.ArrayCollection;
-			import mx.events.IndexChangedEvent;
 			
 			import spark.events.IndexChangeEvent;
 			
@@ -23,6 +22,8 @@
 			[Bindable] [Embed(source="assets/test_passed_icon.png")]  public var TestPassedIconClass:Class;
 			[Bindable] [Embed(source="assets/test_not_run_icon.png")] public var TestNotRunIconClass:Class;
 			
+			[Bindable] [Embed(source="assets/progress_circle.swf",symbol="progressCircle")] private var ProgressCircle:Class;
+
 			private var ml:ModelLocator;
 			
 			private function onViewActivate():void
@@ -57,9 +58,11 @@
 				var navInfo:NavigationInfo = ModelLocator.getInstance().navigationManager.getNavigationInfo(selectedTest.viewClassName);
 				this.navigator.pushView(navInfo.thisView);
 			}
-			
+						
 			private function onSubmitResults():void
 			{
+				this.submitButtonSubmitting();
+				
 				var tests:Vector.<Test> = this.ml.testManager.getTests();
 				var vars:URLVariables = new URLVariables();
 
@@ -87,7 +90,7 @@
 			
 			private function onIOError(e:IOErrorEvent):void
 			{
-				trace("onIOError", e.text);
+				this.submitButtonError();
 				var loader:URLLoader = e.target as URLLoader;
 				loader.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
 				loader.removeEventListener(Event.COMPLETE, onComplete);
@@ -96,21 +99,50 @@
 			
 			private function onResponseStatus(e:HTTPStatusEvent):void
 			{
-				trace("onResponseStatus", e.status);
+				if (e.status != 200)
+				{
+					this.submitButtonError();
+					var loader:URLLoader = e.target as URLLoader;
+					loader.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
+					loader.removeEventListener(Event.COMPLETE, onComplete);
+					loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onResponseStatus);
+				}
 			}
 			
 			private function onComplete(e:Event):void
 			{
-				trace("onComplete");
 				var loader:URLLoader = e.target as URLLoader;
 				loader.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
 				loader.removeEventListener(Event.COMPLETE, onComplete);
 				loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onResponseStatus);
+				this.submitButtonSuccess();
 			}
+			
+			private function submitButtonSubmitting():void
+			{
+				this.submitButton.enabled = false;
+				this.submitButton.icon = this.ProgressCircle;
+				this.submitButton.label = "Submitting...";
+			}
+			
+			private function submitButtonError():void
+			{
+				this.submitButton.enabled = true;
+				this.submitButton.icon = TestFailedIconClass;
+				this.submitButton.label = "Error. Please try again.";
+			}
+			
+			private function submitButtonSuccess():void
+			{
+				this.submitButton.enabled = false;
+				this.submitButton.icon = TestPassedIconClass;
+				this.submitButton.label = "Results Submitted!";
+			}
+
 		]]>
 	</fx:Script>
 	
-	<s:VGroup width="100%" height="100%" horizontalAlign="center">
+	<s:VGroup width="100%" height="100%" horizontalAlign="center" paddingBottom="6">
 		<components:MultiLineLabel text="Below are your test results." width="100%"/>
 		<s:List id="resultsList" width="100%" height="100%" change="onTestSelected(event);">
 			<s:itemRenderer>
@@ -156,7 +188,7 @@
 				</fx:Component>
 			</s:itemRenderer>
 		</s:List>
-		<s:Button id="submitButton" label="Submit Results to Adobe" click="onSubmitResults();"/>
+		<s:Button id="submitButton" label="Submit Results" click="onSubmitResults();"/>
 	</s:VGroup>
 	
 	<!--<components:NavigationBar left="0" right="0" bottom="0" showStatusTest="false"/>-->

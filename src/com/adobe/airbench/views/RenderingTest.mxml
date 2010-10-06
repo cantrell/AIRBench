@@ -83,8 +83,6 @@
 
 			private function onTick():void
 			{
-				var m:Matrix = this.square.transform.matrix;
-				m.rotate(.02);
 				if (this.square.scaleX <= 0.09)
 				{
 					this.scaleFactor = 1.01
@@ -93,9 +91,10 @@
 				{
 					this.scaleFactor = .99;
 				}
-				m.scale(this.scaleFactor, this.scaleFactor);
+				this.square.rotation += 3;
+				this.square.scaleX *= scaleFactor;
+				this.square.scaleY *= scaleFactor;
 				this.square.alpha = this.square.scaleX;
-				this.square.transform.matrix = m;
 			}
 			
 		]]>

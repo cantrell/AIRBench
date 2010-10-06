@@ -88,8 +88,8 @@
 	<s:VGroup width="100%" height="100%">
 		<s:Scroller width="100%" height="100%">
 			<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
-				<s:Button id="launchButton" label="Launch Camera UI" click="onLaunchCameraUI(event)" enabled="false"/>
 				<s:Image id="imageDisplay" width="400" height="400"/>
+				<s:Button id="launchButton" label="Launch Camera UI" click="onLaunchCameraUI(event)" enabled="false"/>
 			</s:VGroup>
 		</s:Scroller>
 		<components:NavigationBar id="navBar" width="100%"/>
