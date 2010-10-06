@@ -63,7 +63,7 @@
 	</fx:Script>
 	<s:VGroup width="100%" height="100%">
 		<s:Scroller width="100%" height="100%">
-			<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+			<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="20">
 				<s:Image id="imageOutput"/>
 				<components:MultiLineLabel id="output" width="80%" height="90"/>
 			</s:VGroup>

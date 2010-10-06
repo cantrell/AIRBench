@@ -30,12 +30,10 @@
 			{
 				this.ml = ModelLocator.getInstance();
 				var testManager:TestManager = ml.testManager;
-				
-				this.submitButton.enabled = testManager.areAllTestsComplete();
-				
 				var testData:Vector.<Test> = testManager.getTests();
 				var capabilityTestData:Array = new Array();
 				var performanceTestData:Array = new Array();
+				var submittable:Boolean = false;
 				for each (var test:Test in testData)
 				{
 					if (test is CapabilityTest)
@@ -46,9 +44,11 @@
 					{
 						performanceTestData.push(test);
 					}
+					if (test.complete && !submittable) submittable = true;
 				}
 				var allTestData:Array = capabilityTestData.concat(performanceTestData);
 				resultsList.dataProvider = new ArrayCollection(allTestData);
+				this.submitButton.enabled = submittable;
 			}
 			
 			private function onTestSelected(e:IndexChangeEvent):void
@@ -188,7 +188,7 @@
 				</fx:Component>
 			</s:itemRenderer>
 		</s:List>
-		<s:Button id="submitButton" label="Submit Results" click="onSubmitResults();"/>
+		<s:Button id="submitButton" label="Submit Results" click="onSubmitResults();" enabled="false"/>
 	</s:VGroup>
 	
 	<!--<components:NavigationBar left="0" right="0" bottom="0" showStatusTest="false"/>-->
