@@ -16,6 +16,7 @@
 			private var ml:ModelLocator;
 			private var geo:Geolocation;
 			private var updateCalled:Boolean;
+			private var timer:Timer;
 			
 			private function onViewActivate():void
 			{
@@ -32,6 +33,12 @@
 			
 			private function onViewDeactivate():void
 			{
+				this.stopTimer();
+				this.stopGeolocation();
+			}
+
+			private function stopGeolocation():void
+			{
 				if (this.geo != null)
 				{
 					this.geo.removeEventListener(GeolocationEvent.UPDATE, onUpdate);
@@ -39,12 +46,37 @@
 					this.geo = null;
 				}
 			}
-
+			
 			private function testGeolocation():void
 			{
 				this.geo = new Geolocation();
 				this.geo.addEventListener(GeolocationEvent.UPDATE, onUpdate);
 				this.geo.addEventListener(StatusEvent.STATUS, onStatus);
+				this.stopTimer();
+				this.timer = new Timer((60 * 1000) * 2); // two minutes
+				this.timer.addEventListener(TimerEvent.TIMER, checkSuccess);
+				this.timer.start();
+			}
+			
+			private function stopTimer():void
+			{
+				if (this.timer != null)
+				{
+					this.timer.stop();
+					this.timer.removeEventListener(TimerEvent.TIMER, checkSuccess);
+					this.timer = null;
+				}
+			}
+			
+			private function checkSuccess(e:TimerEvent):void
+			{
+				if (!this.updateCalled)
+				{
+					this.stopTimer();
+					this.stopGeolocation();
+					this.ml.testManager.reportCapabilitiesTestResults(GEOLOCATION, false, "Geolocation timed out.");
+					this.navBar.testComplete(false, "Geolocation timed out");
+				}
 			}
 			
 			private function onUpdate(e:GeolocationEvent):void
@@ -60,6 +92,7 @@
 				if (!this.updateCalled)
 				{
 					this.updateCalled = true;
+					this.stopTimer();
 					this.ml.testManager.reportCapabilitiesTestResults(GEOLOCATION, true, "Geolocation data available.");
 					this.navBar.testComplete(true, "Geolocation works!");
 				}
@@ -70,6 +103,7 @@
 				if (!this.geo) return;
 				if (this.geo.muted)
 				{
+					this.stopTimer();
 					this.ml.testManager.reportCapabilitiesTestResults(GEOLOCATION, false, "Geolocation is muted.");
 					this.navBar.testComplete(false, "Geolocation muted");
 				}
