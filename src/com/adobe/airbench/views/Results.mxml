@@ -34,21 +34,29 @@
 				var capabilityTestData:Array = new Array();
 				var performanceTestData:Array = new Array();
 				var submittable:Boolean = false;
+				var totalCapabilityTests:uint = 0;
+				var passedCapabilityTests:uint = 0;
+				var totalPerformanceScore:uint = 0;
 				for each (var test:Test in testData)
 				{
 					if (test is CapabilityTest)
 					{
 						capabilityTestData.push(test);
+						++totalCapabilityTests;
+						if (CapabilityTest(test).passed) ++passedCapabilityTests;
 					}
 					else
 					{
 						performanceTestData.push(test);
+						if (!isNaN(PerformanceTest(test).value)) totalPerformanceScore += PerformanceTest(test).value;
 					}
 					if (test.complete && !submittable) submittable = true;
 				}
 				var allTestData:Array = capabilityTestData.concat(performanceTestData);
 				resultsList.dataProvider = new ArrayCollection(allTestData);
 				this.submitButton.enabled = submittable;
+				this.capabilityScore.text = String(passedCapabilityTests) + " / " + String(totalCapabilityTests);
+				this.performanceScore.text = String(totalPerformanceScore);
 			}
 			
 			private function onTestSelected(e:IndexChangeEvent):void
@@ -143,7 +151,16 @@
 	</fx:Script>
 	
 	<s:VGroup width="100%" height="100%" horizontalAlign="center" paddingBottom="6">
-		<components:MultiLineLabel text="Below are your test results." width="100%"/>
+		<s:HGroup width="100%" paddingTop="10">
+			<s:VGroup width="50%" horizontalAlign="right" verticalAlign="middle">
+				<s:Label text="Capability Score:"/>
+				<s:Label text="Performance Score:"/>
+			</s:VGroup>
+			<s:VGroup width="50%" horizontalAlign="left" verticalAlign="middle">
+				<s:Label id="capabilityScore"/>
+				<s:Label id="performanceScore"/>
+			</s:VGroup>
+		</s:HGroup>
 		<s:List id="resultsList" width="100%" height="100%" change="onTestSelected(event);">
 			<s:itemRenderer>
 				<fx:Component>
