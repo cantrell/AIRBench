@@ -114,27 +114,28 @@
 	
 	<s:VGroup width="100%" height="100%">
 		<s:Scroller width="100%" height="100%">
-			<s:Group width="100%" height="100%">
-
-				<s:Label text="Latitude:"            right="250" y="100"/>	
-				<s:Label text="Longitude:"           right="250" y="150"/>	
-				<s:Label text="Altitude:"            right="250" y="200"/>	
-				<s:Label text="Heading:"             right="250" y="250"/>	
-				<s:Label text="Speed:"               right="250" y="300"/>	
-				<s:Label text="Horizontal Accuracy:" right="250" y="350"/>	
-				<s:Label text="Vertical Accuracy:"   right="250" y="400"/>	
-				<s:Label text="Timestamp:"           right="250" y="450"/>	
-				
-				<s:Label id="latitude"            left="250" y="100" text="0"/>	
-				<s:Label id="longitude"           left="250" y="150" text="0"/>	
-				<s:Label id="altitude"            left="250" y="200" text="0"/>	
-				<s:Label id="heading"             left="250" y="250" text="0"/>	
-				<s:Label id="speed"               left="250" y="300" text="0"/>	
-				<s:Label id="horizontalAccuracy"  left="250" y="350" text="0"/>	
-				<s:Label id="verticalAccuracy"    left="250" y="400" text="0"/>	
-				<s:Label id="timestamp"           left="250" y="450" text="0"/>	
-				
-			</s:Group>
+			<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+				<s:VGroup width="50%" height="100%" verticalAlign="middle" horizontalAlign="right" gap="20">
+					<s:Label text="Latitude:"/>	
+					<s:Label text="Longitude:"/>	
+					<s:Label text="Altitude:"/>	
+					<s:Label text="Heading:"/>	
+					<s:Label text="Speed:"/>	
+					<s:Label text="Horizontal Accuracy:"/>	
+					<s:Label text="Vertical Accuracy:"/>	
+					<s:Label text="Timestamp:"/>	
+				</s:VGroup>
+				<s:VGroup width="50%" height="100%" verticalAlign="middle" horizontalAlign="left" gap="20">
+					<s:Label id="latitude" text="0"/>	
+					<s:Label id="longitude" text="0"/>	
+					<s:Label id="altitude" text="0"/>	
+					<s:Label id="heading" text="0"/>	
+					<s:Label id="speed" text="0"/>	
+					<s:Label id="horizontalAccuracy" text="0"/>	
+					<s:Label id="verticalAccuracy" text="0"/>	
+					<s:Label id="timestamp" text="0"/>	
+				</s:VGroup>
+			</s:HGroup>
 		</s:Scroller>
 		<components:NavigationBar id="navBar" width="100%"/>
 	</s:VGroup>

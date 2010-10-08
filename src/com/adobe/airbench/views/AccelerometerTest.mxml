@@ -73,17 +73,18 @@
 	</fx:Script>
 	<s:VGroup width="100%" height="100%">
 		<s:Scroller width="100%" height="100%">
-			<s:Group width="100%" height="100%">
-
-				<s:Label text="X:" right="350" y="200"/>	
-				<s:Label text="Y:" right="350" y="250"/>	
-				<s:Label text="Z:" right="350" y="300"/>	
-				
-				<s:Label id="accelerationX" left="150" y="200" text="0"/>	
-				<s:Label id="accelerationY" left="150" y="250" text="0"/>	
-				<s:Label id="accelerationZ" left="150" y="300" text="0"/>	
-				
-			</s:Group>
+			<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+				<s:VGroup width="30%" height="100%" verticalAlign="middle" horizontalAlign="right" gap="20">
+					<s:Label text="X:"/>	
+					<s:Label text="Y:"/>	
+					<s:Label text="Z:"/>	
+				</s:VGroup>
+				<s:VGroup width="70%" height="100%" verticalAlign="middle" horizontalAlign="left" gap="20">
+					<s:Label id="accelerationX" text="0"/>	
+					<s:Label id="accelerationY" text="0"/>	
+					<s:Label id="accelerationZ" text="0"/>	
+				</s:VGroup>
+			</s:HGroup>
 		</s:Scroller>
 		<components:NavigationBar id="navBar" width="100%"/>
 	</s:VGroup>
