@@ -5,104 +5,104 @@
 	<view order="1">
 		<className>com.adobe.airbench.views::CameraTest</className>
 		<benchmarks>
-			<test id="camera" displayName="Camera" type="capability"/>
+			<test id="camera" displayName="Camera" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="2">
 		<className>com.adobe.airbench.views::CameraUIImageTest</className>
 		<benchmarks>
-			<test id="camera_ui_image" displayName="Camera UI Image" type="capability"/>
+			<test id="camera_ui_image" displayName="Camera UI Image" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="3">
 		<className>com.adobe.airbench.views::CameraUIVideoTest</className>
 		<benchmarks>
-			<test id="camera_ui_video" displayName="Camera UI Video" type="capability"/>
+			<test id="camera_ui_video" displayName="Camera UI Video" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="4">
 		<className>com.adobe.airbench.views::CameraRollAddTest</className>
 		<benchmarks>
-			<test id="camera_roll_add" displayName="Camera Roll Add" type="capability"/>
+			<test id="camera_roll_add" displayName="Camera Roll Add" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="5">
 		<className>com.adobe.airbench.views::CameraRollBrowseTest</className>
 		<benchmarks>
-			<test id="camera_roll_browse" displayName="Camera Roll Browse" type="capability"/>
+			<test id="camera_roll_browse" displayName="Camera Roll Browse" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="6">
 		<className>com.adobe.airbench.views::GeolocationTest</className>
 		<benchmarks>
-			<test id="geolocation" displayName="Geolocation" type="capability"/>
+			<test id="geolocation" displayName="Geolocation" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="7">
 		<className>com.adobe.airbench.views::AccelerometerTest</className>
 		<benchmarks>
-			<test id="accelerometer" displayName="Accelerometer" type="capability"/>
+			<test id="accelerometer" displayName="Accelerometer" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="8">
 		<className>com.adobe.airbench.views::MultitouchTest</className>
 		<benchmarks>
-			<test id="multitouch" displayName="Multitouch" type="capability"/>
+			<test id="multitouch" displayName="Multitouch" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="9">
 		<className>com.adobe.airbench.views::MicrophoneTest</className>
 		<benchmarks>
-			<test id="microphone" displayName="Microphone" type="capability"/>
+			<test id="microphone" displayName="Microphone" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="10">
 		<className>com.adobe.airbench.views::StageWebViewTest</className>
 		<benchmarks>
-			<test id="stage_web_view" displayName="StageWebView" type="capability"/>
+			<test id="stage_web_view" displayName="StageWebView" type="capability" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="11">
 		<className>com.adobe.airbench.views::XMLTest</className>
 		<benchmarks>
-			<test id="xml_parsing" displayName="XML Parsing" type="performance"/>
+			<test id="xml_parsing" displayName="XML Parsing" type="performance" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="12">
 		<className>com.adobe.airbench.views::MemoryAllocationTest</className>
 		<benchmarks>
-			<test id="memory_allocation" displayName="Memory Allocation" type="performance"/>
+			<test id="memory_allocation" displayName="Memory Allocation" type="performance" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="13">
 		<className>com.adobe.airbench.views::FileAccessTest</className>
 		<benchmarks>
-			<test id="file_access" displayName="File Access" type="performance"/>
+			<test id="file_access" displayName="File Access" type="performance" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="14">
 		<className>com.adobe.airbench.views::SQLTest</className>
 		<benchmarks>
-			<test id="sql" displayName="SQL" type="performance"/>
+			<test id="sql" displayName="SQL" type="performance" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="15">
 		<className>com.adobe.airbench.views::StringTest</className>
 		<benchmarks>
-			<test id="string_ops" displayName="String" type="performance"/>
+			<test id="string_ops" displayName="String" type="performance" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="16">
 		<className>com.adobe.airbench.views::ComputationTest</className>
 		<benchmarks>
-			<test id="computation_sha256" displayName="Computation (SHA256)" type="performance"/>
-			<test id="computation_solar_calc" displayName="Computation (Solar Calc)" type="performance"/>
+			<test id="computation_sha256" displayName="Computation (SHA256)" type="performance" version="1"/>
+			<test id="computation_solar_calc" displayName="Computation (Solar Calc)" type="performance" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="17">
 		<className>com.adobe.airbench.views::RenderingTest</className>
 		<benchmarks>
-			<test id="rendering" displayName="Rendering" type="performance"/>
+			<test id="rendering" displayName="Rendering" type="performance" version="1"/>
 		</benchmarks>
 	</view>
 	<view order="18">

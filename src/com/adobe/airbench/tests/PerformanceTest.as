@@ -4,9 +4,9 @@ package com.adobe.airbench.tests
 	{
 		public var value:Number;
 		
-		public function PerformanceTest(testId:String, displayName:String):void
+		public function PerformanceTest(testId:String, displayName:String, version:Number):void
 		{
-			super(testId, displayName);
+			super(testId, displayName, version);
 		}
 	}
 }

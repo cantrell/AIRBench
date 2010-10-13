@@ -4,7 +4,6 @@ package com.adobe.airbench.model
 	import com.adobe.airbench.tests.TestManager;
 	
 	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
 	
 	public class ModelLocator extends EventDispatcher
 	{

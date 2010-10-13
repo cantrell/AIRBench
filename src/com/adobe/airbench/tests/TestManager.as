@@ -18,16 +18,16 @@ package com.adobe.airbench.tests
 			this.tests = new Vector.<Test>();
 		}
 		
-		public function registerTest(testId:String, displayName:String, type:String, viewClassName:String):void
+		public function registerTest(testId:String, displayName:String, type:String, version:Number, viewClassName:String):void
 		{
 			var test:Test;
 			if (type == CAPABILITY_TEST_TYPE)
 			{
-				test = new CapabilityTest(testId, displayName);
+				test = new CapabilityTest(testId, displayName, version);
 			}
 			else if (type == PERFORMANCE_TEST_TYPE)
 			{
-				test = new PerformanceTest(testId, displayName);
+				test = new PerformanceTest(testId, displayName, version);
 			}
 			test.viewClassName = viewClassName;
 			this.tests.push(test);

@@ -76,9 +76,10 @@
 						for each (var testNode:XML in benchmarksNode.test)
 						{
 							var testId:String = testNode.@id;
+							var testVersion:Number = Number(testNode.@version);
 							var displayName:String = testNode.@displayName;
 							var testType:String = testNode.@type;
-							testManager.registerTest(testId, displayName, testType, className);
+							testManager.registerTest(testId, displayName, testType, testVersion, className);
 						}
 					}
 				}

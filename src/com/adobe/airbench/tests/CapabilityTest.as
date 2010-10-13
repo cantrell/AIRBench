@@ -4,9 +4,9 @@ package com.adobe.airbench.tests
 	{
 		public var passed:Boolean;
 		
-		public function CapabilityTest(testId:String, displayName:String)
+		public function CapabilityTest(testId:String, displayName:String, version:Number)
 		{
-			super(testId, displayName);
+			super(testId, displayName, version);
 		}
 	}
 }

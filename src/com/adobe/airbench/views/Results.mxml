@@ -6,6 +6,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.adobe.airbench.model.DeviceConfig;
 			import com.adobe.airbench.model.ModelLocator;
 			import com.adobe.airbench.navigation.NavigationInfo;
 			import com.adobe.airbench.tests.CapabilityTest;
@@ -71,19 +72,53 @@
 			{
 				this.submitButtonSubmitting();
 				
-				var tests:Vector.<Test> = this.ml.testManager.getTests();
 				var vars:URLVariables = new URLVariables();
 
-				vars["uuid"]                    = this.ml.uuid;
-				vars["device_cpu"]              = Capabilities.cpuArchitecture;
-				vars["device_manufacturer"]     = Capabilities.manufacturer;
-				vars["device_os"]               = Capabilities.os;
-				vars["device_version"]          = Capabilities.version;
+				vars[DeviceConfig.UUID] = this.ml.uuid;
+				
+				var f:File = new File("/system/build.prop");
+				//var f:File = File.desktopDirectory.resolvePath("build.prop");
+				if (f.exists)  // Android
+				{
+					var fs:FileStream = new FileStream();
+					fs.open(f, FileMode.READ);
+					var fileBytes:ByteArray = new ByteArray();
+					fs.readBytes(fileBytes);
+					var props:String = new String(fileBytes);
+					var propsArray:Array = props.split("\n");
+					var deviceConfig:DeviceConfig = new DeviceConfig();
+					for each (var prop:String in propsArray)
+					{
+						if (prop.indexOf("net.bt.name=")              == 0) {deviceConfig.properties[DeviceConfig.OS_NAME]          = prop.split("=")[1]; continue;} 
+						if (prop.indexOf("ro.build.display.id=")      == 0) {deviceConfig.properties[DeviceConfig.OS_BUILD]         = prop.split("=")[1]; continue;} 
+						if (prop.indexOf("ro.build.version.sdk=")     == 0) {deviceConfig.properties[DeviceConfig.OS_SDK_VERSION]   = prop.split("=")[1]; continue;}
+						if (prop.indexOf("ro.build.version.release=") == 0) {deviceConfig.properties[DeviceConfig.OS_VERSION]       = prop.split("=")[1]; continue;}
+						if (prop.indexOf("ro.product.model=")         == 0) {deviceConfig.properties[DeviceConfig.MODEL]            = prop.split("=")[1]; continue;}
+						if (prop.indexOf("ro.product.brand=")         == 0) {deviceConfig.properties[DeviceConfig.BRAND]            = prop.split("=")[1]; continue;}
+						if (prop.indexOf("ro.product.name=")          == 0) {deviceConfig.properties[DeviceConfig.NAME]             = prop.split("=")[1]; continue;}
+						if (prop.indexOf("ro.product.cpu.abi=")       == 0) {deviceConfig.properties[DeviceConfig.CPU]              = prop.split("=")[1]; continue;}
+						if (prop.indexOf("ro.product.manufacturer=")  == 0) {deviceConfig.properties[DeviceConfig.MANUFACTURER]     = prop.split("=")[1]; continue;}
+						if (prop.indexOf("ro.opengles.version=")      == 0) {deviceConfig.properties[DeviceConfig.OPENGLES_VERSION] = prop.split("=")[1]; continue;}
+					}
+					
+					for (var propName:String in deviceConfig.properties)
+					{
+						vars[propName] = deviceConfig.properties[propName];
+					}
+				}
+				else
+				{
+					// Not Android
+				}
+
+				var tests:Vector.<Test> = this.ml.testManager.getTests();
 				
 				for each (var test:Test in tests)
 				{
-					vars[test.testId] = (test is PerformanceTest) ? PerformanceTest(test).value : CapabilityTest(test).passed;
-					vars[test.testId + "_name"] = test.displayName;
+					if (!test.complete) continue;
+					vars[test.testId]              = (test is PerformanceTest) ? PerformanceTest(test).value : CapabilityTest(test).passed;
+					vars[test.testId + "_name"]    = test.displayName;
+					vars[test.testId + "_version"] = test.testVersion;
 				}
 				
 				var req:URLRequest = new URLRequest("http://airbenchmark.com/TestResults/save");
@@ -151,7 +186,7 @@
 	</fx:Script>
 	
 	<s:VGroup width="100%" height="100%" horizontalAlign="center" paddingBottom="6">
-		<s:HGroup width="100%" paddingTop="10">
+		<s:HGroup width="100%" paddingTop="11">
 			<s:VGroup width="50%" horizontalAlign="right" verticalAlign="middle">
 				<s:Label text="Capability Score:"/>
 				<s:Label text="Performance Score:"/>
