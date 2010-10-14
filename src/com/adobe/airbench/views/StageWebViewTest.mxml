@@ -37,9 +37,17 @@
 				this.swv.viewPort = new Rectangle(0, this.navigator.actionBar.height, this.width, (this.height - this.navBar.height));
 				var f:File = File.applicationDirectory.resolvePath("test_assets/swv_load_test.html");
 				var fs:FileStream = new FileStream();
-				fs.open(f, FileMode.READ);
+				fs.addEventListener(Event.COMPLETE, onFileLoaded);
+				fs.openAsync(f, FileMode.READ);
+			}
+			
+			private function onFileLoaded(e:Event):void
+			{
+				var fs:FileStream = e.target as FileStream;
+				fs.removeEventListener(Event.COMPLETE, onFileLoaded);
 				var fBytes:ByteArray = new ByteArray();
 				fs.readBytes(fBytes);
+				fs.close();
 				this.swv.loadString(new String(fBytes));
 			}
 			
