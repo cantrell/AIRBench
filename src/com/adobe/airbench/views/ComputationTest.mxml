@@ -26,7 +26,7 @@
 										  {"lat":43.64507,           "lng":-79.522058,          "utcOffset":-5},  // Adobe Toronto
 										  {"lat":45.402449,          "lng":-75.710488,          "utcOffset":-5},  // Adobe Ottawa
 										  {"lat":37.42267078431052,  "lng":-122.08509922027588, "utcOffset":-8}]; // Googleplex
-			private const CITY_ITERATIONS:uint = 50;
+			private const CITY_ITERATIONS:uint = 100;
 			
 			private function onViewActivate():void
 			{

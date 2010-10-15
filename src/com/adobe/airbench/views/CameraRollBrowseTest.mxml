@@ -2,7 +2,7 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:components="com.adobe.airbench.components.*"
-		title="CameraRoll Browse"
+		title="Camera Roll Browse"
 		viewActivate="onViewActivate();"
 		viewDeactivate="onViewDeactivate();">
 	<fx:Script>
@@ -81,6 +81,7 @@
 		<s:Scroller width="100%" height="100%">
 			<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" gap="20">
 				<s:Image id="imageOutput" width="400" height="400"/>
+				<s:Label text="Try picking a picture."/>
 				<s:Button id="browseCameraRollButton" label="Browse Camera Roll" click="testCameraRollBrowse();" enabled="false"/>
 			</s:VGroup>
 		</s:Scroller>

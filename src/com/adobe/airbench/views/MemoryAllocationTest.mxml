@@ -12,7 +12,7 @@
 			
 			private const MEMORY_ALLOCATION:String = "memory_allocation";
 			private var ml:ModelLocator;
-			private var size:uint = (1024 * 1024) * 4; // four MB
+			private var size:uint = (1024 * 1024) * 8; // eight MB
 			
 			private function onViewActivate():void
 			{

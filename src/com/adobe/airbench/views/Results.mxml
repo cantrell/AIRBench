@@ -57,7 +57,8 @@
 				resultsList.dataProvider = new ArrayCollection(allTestData);
 				this.submitButton.enabled = submittable;
 				this.capabilityScore.text = String(passedCapabilityTests) + " / " + String(totalCapabilityTests);
-				this.performanceScore.text = String(totalPerformanceScore);
+				this.performanceScore.text = String(totalPerformanceScore) + " (low is good)";
+				this.testSuiteVersion.text = testManager.getTestSuiteVersion();
 			}
 			
 			private function onTestSelected(e:IndexChangeEvent):void
@@ -75,7 +76,9 @@
 				var vars:URLVariables = new URLVariables();
 
 				vars[DeviceConfig.UUID] = this.ml.uuid;
-				
+
+				var deviceConfig:DeviceConfig = new DeviceConfig();
+
 				var f:File = new File("/system/build.prop");
 				//var f:File = File.desktopDirectory.resolvePath("build.prop");
 				if (f.exists)  // Android
@@ -86,7 +89,6 @@
 					fs.readBytes(fileBytes);
 					var props:String = new String(fileBytes);
 					var propsArray:Array = props.split("\n");
-					var deviceConfig:DeviceConfig = new DeviceConfig();
 					for each (var prop:String in propsArray)
 					{
 						if (prop.indexOf("net.bt.name=")              == 0) {deviceConfig.properties[DeviceConfig.OS_NAME]          = prop.split("=")[1]; continue;} 
@@ -100,15 +102,18 @@
 						if (prop.indexOf("ro.product.manufacturer=")  == 0) {deviceConfig.properties[DeviceConfig.MANUFACTURER]     = prop.split("=")[1]; continue;}
 						if (prop.indexOf("ro.opengles.version=")      == 0) {deviceConfig.properties[DeviceConfig.OPENGLES_VERSION] = prop.split("=")[1]; continue;}
 					}
-					
-					for (var propName:String in deviceConfig.properties)
-					{
-						vars[propName] = deviceConfig.properties[propName];
-					}
 				}
 				else
 				{
-					// Not Android
+					// Not Android. Default to Capabilities for now. Hopefully we'll have better APIs in the future.
+					deviceConfig.properties[DeviceConfig.OS_NAME]      = Capabilities.os;
+					deviceConfig.properties[DeviceConfig.MANUFACTURER] = Capabilities.manufacturer;
+					deviceConfig.properties[DeviceConfig.OS_VERSION]   = Capabilities.version;
+				}
+
+				for (var propName:String in deviceConfig.properties)
+				{
+					vars[propName] = deviceConfig.properties[propName];
 				}
 
 				var tests:Vector.<Test> = this.ml.testManager.getTests();
@@ -190,10 +195,12 @@
 			<s:VGroup width="50%" horizontalAlign="right" verticalAlign="middle">
 				<s:Label text="Capability Score:"/>
 				<s:Label text="Performance Score:"/>
+				<s:Label text="Test Suite Version:"/>
 			</s:VGroup>
 			<s:VGroup width="50%" horizontalAlign="left" verticalAlign="middle">
 				<s:Label id="capabilityScore"/>
 				<s:Label id="performanceScore"/>
+				<s:Label id="testSuiteVersion"/>
 			</s:VGroup>
 		</s:HGroup>
 		<s:List id="resultsList" width="100%" height="100%" change="onTestSelected(event);">

@@ -9,6 +9,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.airbench.model.ModelLocator;
+			
 			import flash.sensors.Accelerometer;
 			
 			private const ACCELEROMETER:String = "accelerometer";

@@ -12,9 +12,11 @@ package com.adobe.airbench.tests
 		public static const PERFORMANCE_TEST_TYPE:String = "performance";
 		
 		private var tests:Vector.<Test>;
+		private var testSuiteVersion:String;
 		
-		public function TestManager():void
+		public function TestManager(testSuiteVersion:String):void
 		{
+			this.testSuiteVersion = testSuiteVersion;
 			this.tests = new Vector.<Test>();
 		}
 		
@@ -84,6 +86,11 @@ package com.adobe.airbench.tests
 		public function getTests():Vector.<Test>
 		{
 			return this.tests;
+		}
+		
+		public function getTestSuiteVersion():String
+		{
+			return this.testSuiteVersion;
 		}
 	}
 }

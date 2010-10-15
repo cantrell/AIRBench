@@ -8,7 +8,6 @@
 		<![CDATA[
 			import com.adobe.airbench.model.ModelLocator;
 			import com.adobe.airbench.navigation.NavigationManager;
-			import com.adobe.airbench.tests.Test;
 			import com.adobe.airbench.tests.TestManager;
 			import com.adobe.airbench.views.*;
 			
@@ -63,7 +62,7 @@
 				var viewsXml:XMLList = testXml.view;
 				
 				var navData:Vector.<String> = new Vector.<String>(viewsXml.length());
-				var testManager:TestManager = new TestManager();
+				var testManager:TestManager = new TestManager(testXml.@version);
 				
 				for each (var viewNode:XML in viewsXml)
 				{

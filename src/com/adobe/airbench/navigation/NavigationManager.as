@@ -1,10 +1,5 @@
 package com.adobe.airbench.navigation
 {
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
-	import flash.system.System;
-	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
 	
 	public class NavigationManager

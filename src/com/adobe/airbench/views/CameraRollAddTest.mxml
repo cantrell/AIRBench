@@ -2,7 +2,7 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:components="com.adobe.airbench.components.*"
-		title="CameraRoll Add"
+		title="Camera Roll Add"
 		viewActivate="onViewActivate();"
 		viewDeactivate="onViewDeactivate();">
 	<fx:Script>

@@ -8,7 +8,6 @@
 			import com.adobe.airbench.navigation.NavigationInfo;
 			
 			import spark.components.View;
-			import spark.effects.SlideViewTransition;
 			
 			private var navInfo:NavigationInfo;
 			private var _parent:View;

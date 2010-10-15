@@ -1,4 +1,4 @@
-<nav>
+<tests version="1.0">
 	<view order="0">
 		<className>com.adobe.airbench.views::Home</className>
 	</view>
@@ -108,4 +108,4 @@
 	<view order="18">
 		<className>com.adobe.airbench.views::Results</className>
 	</view>
-</nav>
+</tests>
