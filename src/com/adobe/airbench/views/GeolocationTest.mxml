@@ -112,7 +112,7 @@
 		]]>
 	</fx:Script>
 	
-	<s:VGroup width="100%" height="100%">
+	<s:VGroup width="100%" height="100%" horizontalAlign="center">
 		<s:Scroller width="100%" height="100%">
 			<s:HGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
 				<s:VGroup width="50%" height="100%" verticalAlign="middle" horizontalAlign="right" gap="20">
@@ -137,6 +137,7 @@
 				</s:VGroup>
 			</s:HGroup>
 		</s:Scroller>
+		<components:MultiLineLabel text="(You might need to be outside for this test to work.)"/>
 		<components:NavigationBar id="navBar" width="100%"/>
 	</s:VGroup>
 </s:View>

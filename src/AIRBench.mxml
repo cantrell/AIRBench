@@ -2,6 +2,8 @@
 <s:MobileApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					 xmlns:s="library://ns.adobe.com/flex/spark"
 					 firstView="com.adobe.airbench.views.Home"
+					 splashScreenImage="@Embed('assets/splash.png')" splashScreenScaleMode="none"
+					 backgroundColor="#484848"
 					 initialize="onInit();"
 					 creationComplete="onCreationComplete();">
 	<fx:Script>
