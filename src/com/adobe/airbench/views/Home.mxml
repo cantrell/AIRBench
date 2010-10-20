@@ -28,7 +28,7 @@
 		<components:MultiLineLabel text="AIRBench runs a series of tests to determine how well Adobe AIR runs on your device, then submits the results (completely anonymously) back to Adobe." width="90%"/>
 		<components:MultiLineLabel text="If you have any problems with this application, please use the button below to email me." width="90%"/>
 		<components:MultiLineLabel text="To get started, click on the Next button below." width="90%"/>
-		<s:Button label="Email Me" click="onEmailClick(event);"/>
+		<s:Button label="Email AIRBench" click="onEmailClick(event);"/>
 	</s:VGroup>
 	<components:NavigationBar left="0" right="0" bottom="0" showStatusTest="false"/>
 </s:View>
