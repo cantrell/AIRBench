@@ -18,12 +18,12 @@
 			
 			import spark.events.IndexChangeEvent;
 			
-			[Bindable] [Embed(source="assets/perf_test_icon.png")]    public var PerfTestIconClass:Class;
-			[Bindable] [Embed(source="assets/test_failed_icon.png")]  public var TestFailedIconClass:Class;
-			[Bindable] [Embed(source="assets/test_passed_icon.png")]  public var TestPassedIconClass:Class;
-			[Bindable] [Embed(source="assets/test_not_run_icon.png")] public var TestNotRunIconClass:Class;
+			[Bindable] [Embed(source="/assets/perf_test_icon.png")]    public var PerfTestIconClass:Class;
+			[Bindable] [Embed(source="/assets/test_failed_icon.png")]  public var TestFailedIconClass:Class;
+			[Bindable] [Embed(source="/assets/test_passed_icon.png")]  public var TestPassedIconClass:Class;
+			[Bindable] [Embed(source="/assets/test_not_run_icon.png")] public var TestNotRunIconClass:Class;
 			
-			[Bindable] [Embed(source="assets/progress_circle.swf",symbol="progressCircle")] private var ProgressCircle:Class;
+			[Bindable] [Embed(source="/assets/progress_circle.swf",symbol="progressCircle")] private var ProgressCircle:Class;
 
 			private var ml:ModelLocator;
 			
@@ -169,21 +169,24 @@
 			private function submitButtonSubmitting():void
 			{
 				this.submitButton.enabled = false;
-				this.submitButton.icon = this.ProgressCircle;
+				//this.submitButton.icon = this.ProgressCircle;
+				this.submitButton.setStyle("icon", this.ProgressCircle);
 				this.submitButton.label = "Submitting...";
 			}
 			
 			private function submitButtonError():void
 			{
 				this.submitButton.enabled = true;
-				this.submitButton.icon = TestFailedIconClass;
+				//this.submitButton.icon = TestFailedIconClass;
+				this.submitButton.setStyle("icon", this.TestFailedIconClass);
 				this.submitButton.label = "Error. Please try again.";
 			}
 			
 			private function submitButtonSuccess():void
 			{
 				this.submitButton.enabled = false;
-				this.submitButton.icon = TestPassedIconClass;
+				//this.submitButton.icon = TestPassedIconClass;
+				this.submitButton.setStyle("icon", this.TestPassedIconClass);
 				this.submitButton.label = "Results Submitted!";
 			}
 
@@ -206,7 +209,7 @@
 		<s:List id="resultsList" width="100%" height="100%" change="onTestSelected(event);">
 			<s:itemRenderer>
 				<fx:Component>
-					<s:MobileIconItemRenderer labelFunction="getLabel" messageFunction="getMessage" iconFunction="getIcon">
+					<s:IconItemRenderer labelFunction="getLabel" messageFunction="getMessage" iconFunction="getIcon">
 						<fx:Script>
 							<![CDATA[
 								import com.adobe.airbench.model.ModelLocator;
@@ -243,7 +246,7 @@
 								}
 							]]>
 						</fx:Script>
-					</s:MobileIconItemRenderer>
+					</s:IconItemRenderer>
 				</fx:Component>
 			</s:itemRenderer>
 		</s:List>

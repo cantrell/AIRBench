@@ -10,7 +10,7 @@
 			import com.adobe.airbench.model.ModelLocator;
 			
 			private const CAMERA_ROLL_ADD:String = "camera_roll_add";
-			[Embed(source="assets/adobe_air_logo.jpg")] private var AdobeAIRLogoClass:Class;
+			[Embed(source="/assets/adobe_air_logo.jpg")] private var AdobeAIRLogoClass:Class;
 			
 			private var ml:ModelLocator;
 			
