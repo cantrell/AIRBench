@@ -13,6 +13,7 @@
 			private const IMAGE_SIZE:uint = 400;
 			private var ml:ModelLocator;
 			private var tmpFile:File;
+			private var mpLoader:Loader;
 			
 			private function onViewActivate():void
 			{
@@ -35,7 +36,7 @@
 				}
 				this.launchButton.enabled = true;
 			}
-			
+
 			private function onLaunchCameraUI(e:Event):void
 			{
 				var cameraUI:CameraUI = new CameraUI();
@@ -51,15 +52,39 @@
 				cameraUI.removeEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
 				cameraUI.removeEventListener(Event.CANCEL, onCameraUICanceled);
 				cameraUI.removeEventListener(ErrorEvent.ERROR, onCameraError);
-				if (!e.data || !e.data.file || e.data.file.size == 0)
+				
+				var mediaPromise:MediaPromise = e.data;
+				
+				if (mediaPromise == null)
 				{
-					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, false, "Image data empty.");
-					this.navBar.testComplete(false, "Image data empty");
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, false, "MediaPromise null.");
+					this.navBar.testComplete(false, "MediaPromise null");
 					return;
 				}
-				this.imageDisplay.source = e.data.file.url;
+			
+				this.mpLoader = new Loader();
+				this.mpLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				this.mpLoader.addEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				this.mpLoader.loadFilePromise(mediaPromise);
+			}
+			
+			private function onMediaPromiseLoaded(e:Event):void
+			{
+				var mpLoaderInfo:LoaderInfo = e.target as LoaderInfo;
+				mpLoaderInfo.removeEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				mpLoaderInfo.loader.removeEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				this.imageDisplay.source = mpLoaderInfo.loader;
 				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, true, "The Camera UI works for taking pictures.");
 				this.navBar.testComplete(true, "Camera UI works!");
+			}
+			
+			private function onMediaPromiseLoadError(e:IOErrorEvent):void
+			{
+				var mpLoader:Loader = e.target as Loader;
+				mpLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				this.mpLoader.removeEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_UI_IMAGE, false, "IOError loading MediaPromise.");
+				this.navBar.testComplete(false, "MediaPromise error");
 			}
 			
 			private function onCameraUICanceled(e:Event):void

@@ -12,6 +12,7 @@
 			private const CAMERA_ROLL_BROWSE:String = "camera_roll_browse";
 			
 			private var ml:ModelLocator;
+			private var mpLoader:Loader;
 			
 			private function onViewActivate():void
 			{
@@ -45,17 +46,42 @@
 				cameraRoll.removeEventListener(MediaEvent.SELECT, onSelect);
 				cameraRoll.removeEventListener(ErrorEvent.ERROR, onError);
 				cameraRoll.removeEventListener(Event.CANCEL, onCancel);
-				if (!e.data || !e.data.file || e.data.file.size == 0)
+				
+				var mediaPromise:MediaPromise = e.data;
+				
+				if (mediaPromise == null)
 				{
-					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, false, "Camera roll image empty.");
-					this.navBar.testComplete(false, "Can't browse CameraRoll");
+					this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, false, "MediaPromise null.");
+					this.navBar.testComplete(false, "MediaPromise null");
 					return;
 				}
-				this.imageOutput.source = e.data.file.url;
+				
+				this.mpLoader = new Loader();
+				this.mpLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				this.mpLoader.addEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				this.mpLoader.loadFilePromise(mediaPromise);
+			}
+			
+			
+			private function onMediaPromiseLoaded(e:Event):void
+			{
+				var mpLoaderInfo:LoaderInfo = e.target as LoaderInfo;
+				mpLoaderInfo.removeEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				mpLoaderInfo.loader.removeEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				this.imageOutput.source = mpLoaderInfo.loader;
 				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, true, "Browsing camera roll successful.");
 				this.navBar.testComplete(true, "Image found!");
 			}
 			
+			private function onMediaPromiseLoadError(e:IOErrorEvent):void
+			{
+				var mpLoader:Loader = e.target as Loader;
+				mpLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				this.mpLoader.removeEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				this.ml.testManager.reportCapabilitiesTestResults(CAMERA_ROLL_BROWSE, false, "IOError loading MediaPromise.");
+				this.navBar.testComplete(false, "MediaPromise error");
+			}
+
 			private function onError(e:ErrorEvent):void
 			{
 				var cameraRoll:CameraRoll = e.target as CameraRoll;
