@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:MobileApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					 xmlns:s="library://ns.adobe.com/flex/spark"
 					 firstView="com.adobe.airbench.views.Home"
-					 splashScreenImage="@Embed('assets/splash.png')" splashScreenScaleMode="none"
+					 splashScreenImage="@Embed('/assets/splash.png')" splashScreenScaleMode="none"
 					 backgroundColor="#484848"
 					 initialize="onInit();"
+					 applicationDPI="320"
 					 creationComplete="onCreationComplete();">
 	<fx:Script>
 		<![CDATA[
@@ -128,4 +129,4 @@
 	<s:actionContent>
 		<s:Button icon="@Embed('assets/report_icon.png')" click="onViewResults();"/>
 	</s:actionContent>
-</s:MobileApplication>
+</s:ViewNavigatorApplication>
